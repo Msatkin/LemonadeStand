@@ -24,9 +24,9 @@ namespace LemonadeStand
             bool exit = false;
             while (!exit)
             {
+                display.date = currentDay;
                 CreateNewDay();
                 day.RunPreparationPhase(player, display);
-                exit = day.GetExit();
                 currentDay++;
             }
         }

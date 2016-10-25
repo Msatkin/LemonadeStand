@@ -222,6 +222,45 @@ namespace LemonadeStand
             }
             Console.SetWindowPosition(0, 0);
         }
+        public void DisplayStartOfDayChoices()
+        {
+            ClearMiddle();
+            ClearLower();
+            DisplayUpperInformation();
+            int x = 15;
+            int y = 9;
+            Console.SetCursorPosition(x, y);
+            Console.Write("1: Check the weather.");
+            Console.SetCursorPosition(x, y + 1);
+            Console.Write("2: Buy ingredients.");
+            Console.SetCursorPosition(x, y + 2);
+            Console.Write("3: Set your recipe.");
+            Console.SetCursorPosition(x, y + 3);
+            Console.Write("4: Set lemonade cost");
+            Console.SetCursorPosition(x, y + 4);
+            Console.Write("5: Start the day.");
+            Console.SetCursorPosition(x, y + 5);
+            Console.Write("6: Exit the game.");
+            SetCursorForInput();
+        }
+        public void DisplayEndOfDayInformation()
+        {
+            ClearMiddle();
+            ClearLower();
+            DisplayUpperInformation();
+            int x = 15;
+            int y = 9;
+            Console.SetCursorPosition(x, y);
+            Console.Write("Today you made ${0}!", player.moneyMade);
+            Console.SetCursorPosition(x, y + 2);
+            Console.Write("You sold {0} cups of lemonade", player.salesMade);
+            Console.SetCursorPosition(x, y + 4);
+            int lemonsUsed = (player.recipe[0] * player.pitchersMade);
+            int sugarUsed = (player.recipe[1] * player.pitchersMade);
+            int iceUsed = (player.recipe[2] * player.salesMade);
+            Console.Write("You used {0} lemons, {1} cups of sugar, {2} cubes of ice, and {3} cups.", lemonsUsed, sugarUsed, iceUsed, player.salesMade);
+            SetCursorForInput();
+        }
         public void DisplayRequest(string message)
         {
             SetCursorForDisplay();
@@ -269,14 +308,10 @@ namespace LemonadeStand
         {
             Console.SetCursorPosition(4, 33);
         }
-        public void DisplayInputString(string message)
-        {
-            Console.SetCursorPosition(4, 32);
-            Console.Write(message);
-        }
         public void GetPlayerName()
         {
-            DisplayInputString("Enter your name.");
+            SetCursorForDisplay();
+            Console.Write("Enter your name.");
             SetCursorForInput();
             player.name = Console.ReadLine();
             ClearLower();
@@ -285,6 +320,7 @@ namespace LemonadeStand
         public void DisplayWeather(float weather)
         {
             ClearMiddle();
+            ClearLower();
             SetCursorForDisplay();
             Console.Write(GetWeatherMessage(weather));
             Console.ReadLine();

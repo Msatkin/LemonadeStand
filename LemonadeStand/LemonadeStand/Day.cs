@@ -14,25 +14,43 @@ namespace LemonadeStand
         Random random = new Random();
         Weather weather = new Weather();
         float weatherModifier;
-        int defaultCustomerAmount = 25;
+        int defaultCustomerAmount = 15;
         public int date;
+        float todaysWeather;
 
         //---------------------------------------------Phase 1
         public void RunPreparationPhase(Player player, UserInterface display)
         {
             this.player = player;
             this.display = display;
-            GetWeather();
-            OpenShop();
-            player.GetLemonadeRecipe();
-            player.GetCost();
+            todaysWeather = weather.GetWeather();
+            bool exit = false;
+            while (!exit)
+            {
+                display.DisplayStartOfDayChoices();
+                switch(Console.ReadLine())
+                {
+                    case "1":
+                        display.DisplayWeather(todaysWeather);
+                        break;
+                    case "2":
+                        OpenShop();
+                        break;
+                    case "3":
+                        player.GetLemonadeRecipe();
+                        break;
+                    case "4":
+                        player.GetCost();
+                        break;
+                    case "5":
+                        exit = true;
+                        break;
+                    case "6":
+                        Environment.Exit(0);
+                        break;
+                }
+            }
             RunSalePhase();
-        }
-        public void GetWeather()
-        {
-            weatherModifier = weather.GetWeather();
-            display.DisplayWeather(weatherModifier);
-            Console.ReadLine();
         }
         public void OpenShop()
         {
@@ -70,10 +88,11 @@ namespace LemonadeStand
         }
         public void RunEndOfDayPhase()
         {
-            display.ClearMiddle();
-            display.DisplayRequest(String.Format("Today you made ${0}!", player.moneyMade));
-            Console.ReadLine();
+            display.DisplayEndOfDayInformation();
             player.money += player.moneyMade;
+            display.DisplayUpperInformation();
+            Console.ReadLine();
+
             player.Clear();
         }
         public double GetNumberOfCustomers()
@@ -98,23 +117,5 @@ namespace LemonadeStand
             }
         }
         //---------------------------------------------Exit
-        public bool GetExit()
-        {
-            bool exit = false;
-            while (!exit)
-            {
-                display.ClearMiddle();
-                display.DisplayRequest("Exit the game? (Y/N)");
-                switch (Console.ReadLine().ToLower())
-                {
-                    case "y":
-                        return true;
-
-                    case "n":
-                        return false;
-                }
-            }
-            return false;
-        }
     }
 }

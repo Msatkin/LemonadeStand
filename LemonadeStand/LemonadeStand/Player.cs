@@ -13,7 +13,7 @@ namespace LemonadeStand
         public decimal startingMoney = 20;
         public decimal money = 20;
         public int[] inventory = new int[4] { 0, 0, 0, 0 };
-        public decimal costPerCup;
+        public decimal costPerCup = 0;
         public int drinks;
         public int salesMade;
         public int pitchersMade;
