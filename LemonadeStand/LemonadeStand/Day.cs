@@ -70,8 +70,8 @@ namespace LemonadeStand
         }
         public void RunEndOfDayPhase()
         {
-            Console.Clear();
-            Console.WriteLine("Today you made ${0}!", player.moneyMade);
+            display.ClearMiddle();
+            display.DisplayRequest(String.Format("Today you made ${0}!", player.moneyMade));
             Console.ReadLine();
             player.money += player.moneyMade;
             player.Clear();
@@ -97,14 +97,14 @@ namespace LemonadeStand
                     return new MiddleClass();
             }
         }
-
+        //---------------------------------------------Exit
         public bool GetExit()
         {
             bool exit = false;
             while (!exit)
             {
-                Console.Clear();
-                Console.WriteLine("Exit the game? (Y/N)");
+                display.ClearMiddle();
+                display.DisplayRequest("Exit the game? (Y/N)");
                 switch (Console.ReadLine().ToLower())
                 {
                     case "y":

@@ -12,8 +12,8 @@ namespace LemonadeStand
         float[] tempatureModifier = new float[3] { -0.25f, 0, 0.25f };
         public float GetWeather()
         {
-            int weatherType = random.Next(1,2);
-            float tempatureLevel = tempatureModifier[random.Next(2)];
+            int weatherType = random.Next(1,3);
+            float tempatureLevel = tempatureModifier[random.Next(0, 3)];
             float weather = weatherType + tempatureLevel;
             return weather;
         }

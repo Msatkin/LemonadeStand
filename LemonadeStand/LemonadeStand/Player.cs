@@ -8,7 +8,7 @@ namespace LemonadeStand
 {
     class Player
     {
-        public int[] recipe = new int[3];
+        public int[] recipe = new int[3] { 0, 0, 0 };
         public string name = "null";
         public decimal startingMoney = 20;
         public decimal money = 20;
@@ -20,7 +20,8 @@ namespace LemonadeStand
         private decimal[] supplyCost = new decimal[4] { 0, 0, 0, 0 };
         private decimal[] defaultSupplyCost = new decimal[4] { .5m, 1m, 5m, 5m };
         public decimal moneyMade;
-        Random random = new Random();
+        public Random random;
+        public UserInterface display;
 
         //Clears all temporary data at the end of each day
         public void Clear()
@@ -67,8 +68,10 @@ namespace LemonadeStand
             bool exit = false;
             while (!exit)
             {
-                Console.Clear();
-                Console.WriteLine(message);
+                display.ClearMiddle();
+                display.ClearLower();
+                display.DisplayUpperInformation();
+                display.DisplayRequest(message);
                 string response = Console.ReadLine();
                 try
                 {
@@ -77,7 +80,7 @@ namespace LemonadeStand
                 }
                 catch
                 {
-                    Console.WriteLine("Please enter a whole number.");
+                    display.DisplayEnterNumberError();
                 }
             }
             return 0;
@@ -87,8 +90,10 @@ namespace LemonadeStand
             bool exit = false;
             while (!exit)
             {
-                Console.Clear();
-                Console.WriteLine("How much would you like to charge per cup of lemonade?");
+                display.ClearMiddle();
+                display.ClearLower();
+                display.DisplayUpperInformation();
+                display.DisplayRequest("How much would you like to charge per cup of lemonade?");
                 string response = Console.ReadLine();
                 try
                 {
@@ -98,7 +103,7 @@ namespace LemonadeStand
                 }
                 catch
                 {
-                    Console.WriteLine("Please enter a number.");
+                    display.DisplayCostNumberError();
                 }
             }
         }
@@ -109,9 +114,12 @@ namespace LemonadeStand
             bool exit = false;
             while (!exit)
             {
-                Console.Clear();
-                Console.WriteLine("The current cost of lemons is ${0}", supplyCost[0]);
-                Console.WriteLine("How many lemons do you wish to buy?");
+                display.ClearMiddle();
+                display.ClearLower();
+                display.DisplayUpperInformation();
+                string message = String.Format("The current cost of lemons is ${0}", supplyCost[0]);
+                string messageTwo = "How many lemons do you wish to buy?";
+                display.DisplayRequest(message, messageTwo);
                 string response = Console.ReadLine();
                 int lemonsBought;
                 try
@@ -125,14 +133,12 @@ namespace LemonadeStand
                     }
                     else
                     {
-                        Console.WriteLine("You do not have enough money.");
-                        Console.ReadLine();
+                        display.DisplayNoMoneyError();
                     }
                 }
                 catch
                 {
-                    Console.WriteLine("Please enter a number.");
-                    Console.ReadLine();
+                    display.DisplayEnterNumberError();
                 }
             }
         }
@@ -142,9 +148,12 @@ namespace LemonadeStand
             bool exit = false;
             while (!exit)
             {
-                Console.Clear();
-                Console.WriteLine("Sugar is ${0} per pound. There are 3 cups in each pound.", supplyCost[1]);
-                Console.WriteLine("How many bags of sugar do you wish to buy?");
+                display.ClearMiddle();
+                display.ClearLower();
+                display.DisplayUpperInformation();
+                string message = String.Format("Sugar is ${0} per pound. There are 3 cups in each pound.", supplyCost[1]);
+                string messageTwo = "How many bags of sugar do you wish to buy?";
+                display.DisplayRequest(message, messageTwo);
                 string response = Console.ReadLine();
                 int sugarBought;
                 try
@@ -158,14 +167,12 @@ namespace LemonadeStand
                     }
                     else
                     {
-                        Console.WriteLine("You do not have enough money.");
-                        Console.ReadLine();
+                        display.DisplayNoMoneyError();
                     }
                 }
                 catch
                 {
-                    Console.WriteLine("Please enter a number.");
-                    Console.ReadLine();
+                    display.DisplayEnterNumberError();
                 }
             }
         }
@@ -175,9 +182,12 @@ namespace LemonadeStand
             bool exit = false;
             while (!exit)
             {
-                Console.Clear();
-                Console.WriteLine("Bags of ice cost ${0} and provide you with 50 ice cubes.",supplyCost[2]);
-                Console.WriteLine("How many bags of ice do you wish to buy?");
+                display.ClearMiddle();
+                display.ClearLower();
+                display.DisplayUpperInformation();
+                string message = String.Format("Bags of ice cost ${0} and provide you with 50 ice cubes.",supplyCost[2]);
+                string messageTwo = "How many bags of ice do you wish to buy?";
+                display.DisplayRequest(message, messageTwo);
                 string response = Console.ReadLine();
                 int iceBought;
                 try
@@ -191,14 +201,12 @@ namespace LemonadeStand
                     }
                     else
                     {
-                        Console.WriteLine("You do not have enough money.");
-                        Console.ReadLine();
+                        display.DisplayNoMoneyError();
                     }
                 }
                 catch
                 {
-                    Console.WriteLine("Please enter a number.");
-                    Console.ReadLine();
+                    display.DisplayEnterNumberError();
                 }
             }
         }
@@ -208,9 +216,12 @@ namespace LemonadeStand
             bool exit = false;
             while (!exit)
             {
-                Console.Clear();
-                Console.WriteLine("Packs of cups cost ${0} and provide you with 50 cups.", supplyCost[3]);
-                Console.WriteLine("How many cups do you wish to buy?");
+                display.ClearMiddle();
+                display.ClearLower();
+                display.DisplayUpperInformation();
+                string message = String.Format("Packs of cups cost ${0} and provide you with 50 cups.", supplyCost[3]);
+                string messageTwo = "How many cups do you wish to buy?";
+                display.DisplayRequest(message, messageTwo);
                 string response = Console.ReadLine();
                 int cupsBought;
                 try
@@ -219,19 +230,17 @@ namespace LemonadeStand
                     if (cupsBought * supplyCost[3] <= money)
                     {
                         money -= (cupsBought * supplyCost[3]);
-                        inventory[1] += cupsBought * 50;
+                        inventory[3] += cupsBought * 50;
                         exit = true;
                     }
                     else
                     {
-                        Console.WriteLine("You do not have enough money.");
-                        Console.ReadLine();
+                        display.DisplayNoMoneyError();
                     }
                 }
                 catch
                 {
-                    Console.WriteLine("Please enter a number.");
-                    Console.ReadLine();
+                    display.DisplayEnterNumberError();
                 }
             }
         }

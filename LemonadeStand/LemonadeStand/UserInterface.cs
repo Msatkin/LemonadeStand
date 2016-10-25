@@ -13,7 +13,7 @@ namespace LemonadeStand
         public bool update = false;
         int upperHeight = 5;
         int lowerHeight = 10;
-        int screenWidth = 125;
+        int screenWidth = 115;
         int screenHeight = 40;
         public int date;
 
@@ -92,10 +92,12 @@ namespace LemonadeStand
         }
         public void DisplayUpperInformation()
         {
+            ClearUpper();
             int margin = 6;
             int lineOne = 13 + margin;
             int lineTwo = 42 + margin;
             int lineThree = 58 + margin;
+            int lineFour = 79 + margin;
             WriteName(margin);
             WriteDay(margin);
             DrawUpperLine(lineOne);
@@ -104,6 +106,8 @@ namespace LemonadeStand
             WriteMoney(lineTwo + margin);
             DrawUpperLine(lineThree);
             WriteProfit(lineThree + margin);
+            DrawUpperLine(lineFour);
+            WriteRecipe(lineFour + margin);
             SetCursorForInput();
         }
         private void WriteName(int x)
@@ -165,20 +169,100 @@ namespace LemonadeStand
                 Console.ForegroundColor = ConsoleColor.Red;
             }
             Console.Write("  $" + profit);
-            Console.ForegroundColor = ConsoleColor.White;
+            Console.ForegroundColor = ConsoleColor.Gray;
+        }
+        private void WriteRecipe(int x)
+        {
+            Console.SetCursorPosition(x + 4, 1);
+            Console.Write("Recipe");
+            //Write lemon amount
+            Console.SetCursorPosition(x, 2);
+            Console.Write("Lemons         : ");
+            if (player.recipe[0] == 0)
+            {
+                Console.Write("---");
+            }
+            else
+            {
+            Console.Write(player.recipe[0]);
+            }
+            //Write sugar amount
+            Console.SetCursorPosition(x, 3);
+            Console.Write("Cups of sugar  : ");
+            if (player.recipe[1] == 0)
+            {
+                Console.Write("---");
+            }
+            else
+            {
+                Console.Write(player.recipe[1]);
+            }
+            //Write ice amount
+            Console.SetCursorPosition(x, 4);
+            Console.Write("Cubes of Ice   : ");
+            if (player.recipe[2] == 0)
+            {
+                Console.Write("---");
+            }
+            else
+            {
+                Console.Write(player.recipe[2]);
+            }
         }
         //---------------------------------------------Display middle section
         public void ClearMiddle()
         {
             for (int i = 1; i < screenWidth - 1; i++)
             {
-                for (int j = upperHeight + 1; j < lowerHeight - 1; j++)
+                for (int j = upperHeight + 1; j < (screenHeight - lowerHeight) - 1; j++)
                 {
                     Console.SetCursorPosition(i, j);
                     Console.Write(" ");
                 }
             }
             Console.SetWindowPosition(0, 0);
+        }
+        public void DisplayRequest(string message)
+        {
+            SetCursorForDisplay();
+            Console.Write(message);
+            SetCursorForInput();
+        }
+        public void DisplayRequest(string message, string messageTwo)
+        {
+            SetCursorForDisplay();
+            Console.Write(message);
+            Console.SetCursorPosition(15, 10);
+            Console.Write(messageTwo);
+            SetCursorForInput();
+        }
+        public void DisplayNoMoneyError()
+        {
+            ClearMiddle();
+            SetCursorForDisplay();
+            Console.Write("You do not have enough money.");
+            SetCursorForInput();
+            Console.ReadLine();
+        }
+        public void DisplayEnterNumberError()
+        {
+            ClearMiddle();
+            SetCursorForDisplay();
+            Console.Write("Please enter a whole number.");
+            SetCursorForInput();
+            Console.ReadLine();
+        }
+        public void DisplayCostNumberError()
+        {
+            ClearMiddle();
+            SetCursorForDisplay();
+            Console.Write("Please enter a number.");
+            SetCursorForInput();
+            Console.ReadLine();
+        }
+        public void SetCursorForDisplay()
+        {
+            Console.SetCursorPosition(15, 9);
         }
         //---------------------------------------------Input
         public void SetCursorForInput()
@@ -200,15 +284,16 @@ namespace LemonadeStand
         //---------------------------------------------Weather
         public void DisplayWeather(float weather)
         {
-            ClearUpper();
-            Console.SetCursorPosition(30, 26);
-            GetWeatherMessage(weather);
+            ClearMiddle();
+            SetCursorForDisplay();
+            Console.Write(GetWeatherMessage(weather));
+            Console.ReadLine();
         }
         private string GetWeatherMessage(float weather)
         {
             switch (Convert.ToString(weather))
             {
-                case ".75":
+                case "0.75":
                     message = "Today's weather is cloudy and cold. The tempature is 40°.";
                     break;
                 case "1":
@@ -225,6 +310,9 @@ namespace LemonadeStand
                     break;
                 case "2.25":
                     message = "Today's weather is sunny and hot. The tempature is 90°.";
+                    break;
+                default:
+                    message = "ERROR! ERROR! ERROR!";
                     break;
             }
             return message;
