@@ -17,7 +17,7 @@ namespace LemonadeStand
         int defaultCustomerAmount = 25;
         public int date;
 
-        //Phase 1----------------------------------------------------------------
+        //---------------------------------------------Phase 1
         public void RunPreparationPhase(Player player, UserInterface display)
         {
             this.player = player;
@@ -41,8 +41,7 @@ namespace LemonadeStand
             player.BuyIce();
             player.BuyCups();
         }
-
-        //Phase 2----------------------------------------------------------------
+        //---------------------------------------------Phase 2
         public void RunSalePhase()
         {
             double population = GetNumberOfCustomers();
@@ -56,7 +55,7 @@ namespace LemonadeStand
                     player.MakeDrinks();
                 }
                 //Has enough materials
-                if (player.drinks > 0 && player.totalIce > player.recipe[2] && player.totalCups > 0)
+                if (player.drinks > 0 && player.inventory[2] >= player.recipe[2] && player.inventory[3] > 0)
                 {
                     //Customer is interested
                     bool cupSold = customer.CheckSale(player.costPerCup, player.recipe);

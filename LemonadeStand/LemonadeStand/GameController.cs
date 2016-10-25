@@ -15,10 +15,15 @@ namespace LemonadeStand
 
         public void Start()
         {
+            //Draw screen, create player, and set player name
+            display.date = currentDay;
             display.FormatScreen();
-            Console.ReadLine();
-            DisplayStartingMessage();
             player = new Player();
+            display.player = player;
+            display.GetPlayerName();
+            display.DisplayUpperInformation();
+            Console.ReadLine();
+            //Run for each new day
             bool exit = false;
             while (!exit)
             {
@@ -27,11 +32,6 @@ namespace LemonadeStand
                 exit = day.GetExit();
                 currentDay++;
             }
-        }
-        public void DisplayStartingMessage()
-        {
-            Console.Write("Press enter to begin.");
-            Console.ReadLine();
         }
         private void CreateNewDay()
         {

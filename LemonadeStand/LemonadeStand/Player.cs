@@ -9,66 +9,47 @@ namespace LemonadeStand
     class Player
     {
         public int[] recipe = new int[3];
-        public string name;
+        public string name = "null";
+        public decimal startingMoney = 20;
         public decimal money = 20;
-        public int totalLemons;
-        public int totalCupsofSugar;
-        public int totalIce;
-        public int totalCups;
+        public int[] inventory = new int[4] { 0, 0, 0, 0 };
         public decimal costPerCup;
         public int drinks;
         public int salesMade;
         public int pitchersMade;
-        private decimal lemonCost;
-        private decimal sugarCost;
-        private decimal iceCost;
-        private decimal cupCost;
-        decimal defaultLemonCost = .5m;
-        decimal defaultSugarCost = 1m;
-        decimal defaultIceCost = 5m;
-        decimal defaultCupCost = 5m;
+        private decimal[] supplyCost = new decimal[4] { 0, 0, 0, 0 };
+        private decimal[] defaultSupplyCost = new decimal[4] { .5m, 1m, 5m, 5m };
         public decimal moneyMade;
         Random random = new Random();
 
         //Clears all temporary data at the end of each day
         public void Clear()
         {
-            lemonCost = 0;
-            sugarCost = 0;
-            iceCost = 0;
-            cupCost = 0;
+            supplyCost[0] = 0;
+            supplyCost[1] = 0;
+            supplyCost[2] = 0;
+            supplyCost[3] = 0;
             salesMade = 0;
             pitchersMade = 0;
             drinks = 0;
             moneyMade = 0;
         }
-        //Define Player--------------------------------
-        public Player()
-        {
-            GetName();
-        }
-        private void GetName()
-        {
-            Console.Clear();
-            Console.WriteLine("Enter your name.");
-            name = Console.ReadLine();
-        }
         //---------------------------------------------
         public void MakeDrinks()
         {
-            if (totalLemons >= recipe[0] && totalCupsofSugar >= recipe[1])
+            if (inventory[0] >= recipe[0] && inventory[1] >= recipe[1])
             {
                 drinks += 12;
-                totalLemons -= recipe[0];
-                totalCupsofSugar -= recipe[1];
+                inventory[0] -= recipe[0];
+                inventory[1] -= recipe[1];
                 pitchersMade++;
             }
         }
         public void SellCup()
         {
             drinks -= 1;
-            totalIce -= recipe[2];
-            totalCups -= 1;
+            inventory[2] -= recipe[2];
+            inventory[3] -= 1;
             moneyMade += costPerCup;
         }
         //---------------------------------------------
@@ -124,22 +105,22 @@ namespace LemonadeStand
         //Buy Items------------------------------------
         public void BuyLemons()
         {
-            lemonCost = GetItemCost() * defaultLemonCost;
+            supplyCost[0] = GetItemCost() * defaultSupplyCost[0];
             bool exit = false;
             while (!exit)
             {
                 Console.Clear();
-                Console.WriteLine("The current cost of lemons is ${0}", lemonCost);
+                Console.WriteLine("The current cost of lemons is ${0}", supplyCost[0]);
                 Console.WriteLine("How many lemons do you wish to buy?");
                 string response = Console.ReadLine();
                 int lemonsBought;
                 try
                 {
                     lemonsBought = Convert.ToInt32(response);
-                    if (lemonsBought * lemonCost <= money)
+                    if (lemonsBought * supplyCost[0] <= money)
                     {
-                        money -= (lemonsBought * lemonCost);
-                        totalLemons += lemonsBought;
+                        money -= (lemonsBought * supplyCost[0]);
+                        inventory[0] += lemonsBought;
                         exit = true;
                     }
                     else
@@ -157,22 +138,22 @@ namespace LemonadeStand
         }
         public void BuySugar()
         {
-            sugarCost = GetItemCost() * defaultSugarCost;
+            supplyCost[1] = GetItemCost() * defaultSupplyCost[1];
             bool exit = false;
             while (!exit)
             {
                 Console.Clear();
-                Console.WriteLine("Sugar is ${0} per pound. There are 3 cups in each pound.", sugarCost);
+                Console.WriteLine("Sugar is ${0} per pound. There are 3 cups in each pound.", supplyCost[1]);
                 Console.WriteLine("How many bags of sugar do you wish to buy?");
                 string response = Console.ReadLine();
                 int sugarBought;
                 try
                 {
                     sugarBought = Convert.ToInt32(response);
-                    if (sugarBought * sugarCost <= money)
+                    if (sugarBought * supplyCost[1] <= money)
                     {
-                        money -= (sugarBought * sugarCost);
-                        totalCupsofSugar += sugarBought * 3;
+                        money -= (sugarBought * supplyCost[1]);
+                        inventory[1] += sugarBought * 3;
                         exit = true;
                     }
                     else
@@ -190,22 +171,22 @@ namespace LemonadeStand
         }
         public void BuyIce()
         {
-            iceCost = GetItemCost() * defaultIceCost;
+            supplyCost[2] = GetItemCost() * defaultSupplyCost[2];
             bool exit = false;
             while (!exit)
             {
                 Console.Clear();
-                Console.WriteLine("Bags of ice cost ${0} and provide you with 50 ice cubes.",iceCost);
+                Console.WriteLine("Bags of ice cost ${0} and provide you with 50 ice cubes.",supplyCost[2]);
                 Console.WriteLine("How many bags of ice do you wish to buy?");
                 string response = Console.ReadLine();
                 int iceBought;
                 try
                 {
                     iceBought = Convert.ToInt32(response);
-                    if (iceBought * iceCost <= money)
+                    if (iceBought * supplyCost[2] <= money)
                     {
-                        money -= (iceBought * iceCost);
-                        totalIce += iceBought * 50;
+                        money -= (iceBought * supplyCost[2]);
+                        inventory[2] += iceBought * 50;
                         exit = true;
                     }
                     else
@@ -223,22 +204,22 @@ namespace LemonadeStand
         }
         public void BuyCups()
         {
-            cupCost = GetItemCost() * defaultCupCost;
+            supplyCost[3] = GetItemCost() * defaultSupplyCost[3];
             bool exit = false;
             while (!exit)
             {
                 Console.Clear();
-                Console.WriteLine("Packs of cups cost ${0} and provide you with 50 cups.", cupCost);
+                Console.WriteLine("Packs of cups cost ${0} and provide you with 50 cups.", supplyCost[3]);
                 Console.WriteLine("How many cups do you wish to buy?");
                 string response = Console.ReadLine();
                 int cupsBought;
                 try
                 {
                     cupsBought = Convert.ToInt32(response);
-                    if (cupsBought * cupCost <= money)
+                    if (cupsBought * supplyCost[3] <= money)
                     {
-                        money -= (cupsBought * cupCost);
-                        totalCupsofSugar += cupsBought * 50;
+                        money -= (cupsBought * supplyCost[3]);
+                        inventory[1] += cupsBought * 50;
                         exit = true;
                     }
                     else
