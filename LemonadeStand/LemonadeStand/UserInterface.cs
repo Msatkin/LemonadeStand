@@ -9,6 +9,7 @@ namespace LemonadeStand
     class UserInterface
     {
         public Player player;
+        public Random random;
         public string message;
         public bool update = false;
         int upperHeight = 5;
@@ -133,19 +134,19 @@ namespace LemonadeStand
             //Write lemon amount
             Console.SetCursorPosition(x, 1);
             Console.Write("Lemons         : ");
-            Console.Write(player.inventory[0]);
+            Console.Write(player.stand.inventory.totalInventory[0]);
             //Write sugar amount
             Console.SetCursorPosition(x, 2);
             Console.Write("Cups of sugar  : ");
-            Console.Write(player.inventory[1]);
+            Console.Write(player.stand.inventory.totalInventory[1]);
             //Write ice amount
             Console.SetCursorPosition(x, 3);
             Console.Write("Cubes of Ice   : ");
-            Console.Write(player.inventory[2]);
+            Console.Write(player.stand.inventory.totalInventory[2]);
             //Write cup amount
             Console.SetCursorPosition(x, 4);
             Console.Write("Cups           : ");
-            Console.Write(player.inventory[3]);
+            Console.Write(player.stand.inventory.totalInventory[3]);
         }
         private void WriteMoney(int x)
         {
@@ -273,6 +274,9 @@ namespace LemonadeStand
         }
         public void DisplayRequest(string message, string messageTwo)
         {
+            ClearMiddle();
+            ClearLower();
+            DisplayUpperInformation();
             SetCursorForDisplay();
             Console.Write(message);
             Console.SetCursorPosition(15, 10);
@@ -358,11 +362,43 @@ namespace LemonadeStand
             return message;
         }
         //---------------------------------------------Art
-        public void DisplayArt()
+        private void ClearArt()
         {
-            DisplayArtGround();
-            DisplayArtTree();
-            DisplayArtStand();
+            for (int i = 1; i < screenWidth - 1; i++)
+            {
+                for (int j = ((screenHeight - lowerHeight) / 2) + 1; j < (screenHeight - lowerHeight); j++)
+                {
+                    Console.SetCursorPosition(i, j);
+                    Console.Write(" ");
+                }
+            }
+            Console.SetWindowPosition(0, 0);
+        }
+        public void DisplayArt(float weather)
+        {
+            ClearArt();
+            if (weather < 1)
+            {
+                ClearArt();
+                DisplayArtRain();
+                DisplayArtGround();
+                DisplayArtTree();
+                DisplayArtStand();
+            }
+            else if (weather < 1.75)
+            {
+                ClearArt();
+                DisplayArtGround();
+                DisplayArtTree();
+                DisplayArtStand();
+            }
+            else
+            {
+                ClearArt();
+                DisplayArtGround();
+                DisplayArtTree();
+                DisplayArtStand();
+            }
         }
         private void DisplayArtGround()
         {
@@ -429,6 +465,21 @@ namespace LemonadeStand
             Console.ForegroundColor = ConsoleColor.DarkMagenta;
             Console.Write("|===|");
             Console.ForegroundColor = ConsoleColor.Gray;
+        }
+        private void DisplayArtRain()
+        {
+            for (int i = 1; i < screenWidth - 1; i++)
+            {
+                for (int j = ((screenHeight - lowerHeight) / 2) + 1; j < (screenHeight - lowerHeight); j++)
+                {
+                    Console.SetCursorPosition(i, j);
+                    if (random.Next(5) == 1)
+                    {
+                        Console.Write("/");
+                    }
+                }
+            }
+            Console.SetWindowPosition(0, 0);
         }
     }
 }

@@ -43,14 +43,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Cup.cs" />
+    <Compile Include="CupofSugar.cs" />
     <Compile Include="Customer.cs" />
     <Compile Include="Day.cs" />
     <Compile Include="GameController.cs" />
+    <Compile Include="Ice.cs" />
+    <Compile Include="Inventory.cs" />
+    <Compile Include="Item.cs" />
+    <Compile Include="Lemon.cs" />
     <Compile Include="LowerClassCitizen.cs" />
     <Compile Include="MiddleClassCitizen.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Stand.cs" />
+    <Compile Include="Store.cs" />
     <Compile Include="UpperClassCitizen.cs" />
     <Compile Include="UserInterface.cs" />
     <Compile Include="Weather.cs" />

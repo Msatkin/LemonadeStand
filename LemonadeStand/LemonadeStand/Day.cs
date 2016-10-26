@@ -11,55 +11,65 @@ namespace LemonadeStand
         Player player;
         Customer customer;
         UserInterface display;
+        Store store;
         Random random = new Random();
         Weather weather = new Weather();
         int defaultCustomerAmount = 15;
         public int date;
         float todaysWeather;
+        public bool rain = false;
         int badtaste = 0;
         int tooExpensive = 0;
         double population = 0;
-
-        //---------------------------------------------Phase 1
-        public void RunPreparationPhase(Player player, UserInterface display)
+        public Day(Player player, UserInterface display)
         {
             this.player = player;
             this.display = display;
+            store = new Store(player);
             todaysWeather = weather.GetWeather();
+            display.DisplayArt(todaysWeather);
+        }
+        //---------------------------------------------Phase 1
+        public void RunMonrningPhase()
+        {
             bool exit = false;
             while (!exit)
             {
-                display.DisplayStartOfDayChoices();
-                switch(Console.ReadLine())
-                {
-                    case "1":
-                        display.DisplayWeather(todaysWeather);
-                        break;
-                    case "2":
-                        OpenShop();
-                        break;
-                    case "3":
-                        player.GetLemonadeRecipe();
-                        break;
-                    case "4":
-                        player.GetCost();
-                        break;
-                    case "5":
-                        exit = true;
-                        break;
-                    case "6":
-                        Environment.Exit(0);
-                        break;
-                }
+                exit = GetStartOfDayInput();
             }
             RunSalePhase();
         }
         public void OpenShop()
         {
-            player.BuyLemons();
-            player.BuySugar();
-            player.BuyIce();
-            player.BuyCups();
+            store.SellLemons();
+            store.SellSugar();
+            store.SellIce();
+            store.SellCups();
+        }
+        private bool GetStartOfDayInput()
+        {
+            display.DisplayStartOfDayChoices();
+            switch (Console.ReadLine())
+            {
+                case "1":
+                    display.DisplayWeather(todaysWeather);
+                    break;
+                case "2":
+                    OpenShop();
+                    break;
+                case "3":
+                    player.GetLemonadeRecipe();
+                    break;
+                case "4":
+                    player.GetCost();
+                    break;
+                case "5":
+                    return true;
+                case "6":
+                    Environment.Exit(0);
+                    break;
+            }
+            return false;
         }
         //---------------------------------------------Phase 2
         public void RunSalePhase()
@@ -75,7 +85,7 @@ namespace LemonadeStand
                     player.MakeDrinks();
                 }
                 //Has enough materials
-                if (player.drinks > 0 && player.inventory[2] >= player.recipe[2] && player.inventory[3] > 0)
+                if (player.drinks > 0 && player.stand.inventory.totalInventory[2] >= player.recipe[2] && player.stand.inventory.totalInventory[3] > 0)
                 {
                     //Customer is interested
                     bool cupSold = customer.CheckSale(player.costPerCup, player.recipe);
@@ -99,10 +109,22 @@ namespace LemonadeStand
         public void RunEndOfDayPhase()
         {
             display.DisplayEndOfDayInformation(tooExpensive, badtaste);
+            PlayEndofDayAudio();
             player.money += player.moneyMade;
             display.DisplayUpperInformation();
             Console.ReadLine();
             player.Clear();
+        }
+        private void PlayEndofDayAudio()
+        {
+            if (player.salesMade > 0)
+            {
+                Console.Beep();
+            }
+            else
+            {
+                Console.Beep();
+            }
         }
         public double GetNumberOfCustomers()
         {
@@ -125,6 +147,5 @@ namespace LemonadeStand
                     return new MiddleClassCitizen();
             }
         }
-        //---------------------------------------------Exit
     }
 }

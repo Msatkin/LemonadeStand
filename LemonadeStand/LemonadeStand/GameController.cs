@@ -8,15 +8,16 @@ namespace LemonadeStand
 {
     class GameController
     {
-        UserInterface display = new UserInterface();
         Random random = new Random();
+        UserInterface display = new UserInterface();
+
         Player player;
         Day day;
         int currentDay = 1;
 
         public void Start()
         {
-            display.DisplayArt();
+            display.random = random;
             display.date = currentDay;
             display.FormatScreen();
             CreatePlayer();
@@ -27,13 +28,13 @@ namespace LemonadeStand
             {
                 display.date = currentDay;
                 CreateNewDay();
-                day.RunPreparationPhase(player, display);
+                day.RunMonrningPhase();
                 currentDay++;
             }
         }
         private void CreateNewDay()
         {
-            day = new Day();
+            day = new Day(player, display);
             day.date = currentDay;
         }
         private void CreatePlayer()
