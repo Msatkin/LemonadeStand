@@ -32,11 +32,7 @@ namespace LemonadeStand
         //---------------------------------------------Phase 1
         public void RunMonrningPhase()
         {
-            bool exit = false;
-            while (!exit)
-            {
-                exit = GetStartOfDayInput();
-            }
+            GetStartOfDayInput();
             RunSalePhase();
         }
         public void OpenShop()
@@ -46,7 +42,7 @@ namespace LemonadeStand
             store.SellIce();
             store.SellCups();
         }
-        private bool GetStartOfDayInput()
+        private void GetStartOfDayInput()
         {
             display.DisplayStartOfDayChoices();
             bool exit = false;
@@ -54,8 +50,6 @@ namespace LemonadeStand
             {
                 exit = ChooseSelection();
             }
-            GetStartOfDayInput();
-            return false;
         }
         public bool ChooseSelection()
         {

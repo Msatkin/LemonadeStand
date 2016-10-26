@@ -91,6 +91,7 @@ namespace LemonadeStand
         {
             if (int.TryParse(Console.ReadLine(), out buyAmount))
             {
+                buyAmount = Math.Abs(buyAmount);
                 if (player.GetCanBuy(buyAmount, supplyCost[i]))
                 {
                     return true;
@@ -119,31 +120,31 @@ namespace LemonadeStand
             int choice = random.Next(1, 100);
             if (choice < 5)
             {
-                supplyCost[i] *= .7m;
+                supplyCost[i] = defaultSupplyCost[i] * .7m;
             }
             else if (choice < 15)
             {
-                supplyCost[i] *= .8m;
+                supplyCost[i] = defaultSupplyCost[i] * .8m;
             }
             else if (choice < 35)
             {
-                supplyCost[i] *= .9m;
+                supplyCost[i] = defaultSupplyCost[i] * .9m;
             }
             else if (choice < 65)
             {
-                supplyCost[i] *= 1;
+                supplyCost[i] = defaultSupplyCost[i] * 1;
             }
             else if (choice < 85)
             {
-                supplyCost[i] *= 1.1m;
+                supplyCost[i] = defaultSupplyCost[i] * 1.1m;
             }
             else if (choice < 95)
             {
-                supplyCost[i] *= 1.2m;
+                supplyCost[i] = defaultSupplyCost[i] * 1.2m;
             }
             else
             {
-                supplyCost[i] *= 1.3m;
+                supplyCost[i] = defaultSupplyCost[i] * 1.3m;
             }
         }
     }

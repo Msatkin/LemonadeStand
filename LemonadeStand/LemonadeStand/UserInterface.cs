@@ -249,9 +249,15 @@ namespace LemonadeStand
         {
             SetCursorForInput();
             ConsoleKeyInfo keypressed = Console.ReadKey();
-            if (keypressed.Key == ConsoleKey.UpArrow)
+            if (keypressed.Key == ConsoleKey.UpArrow || keypressed.Key == ConsoleKey.W)
             {
-                if (startDaySelection != 0)
+                if (startDaySelection == 0)
+                {
+                    ClearSelection();
+                    startDaySelection = 5;
+                    DrawNewSelection();
+                }
+                else
                 {
                     ClearSelection();
                     startDaySelection -= 1;
@@ -259,9 +265,15 @@ namespace LemonadeStand
                 }
                 return false;
             }
-            else if (keypressed.Key == ConsoleKey.DownArrow)
+            else if (keypressed.Key == ConsoleKey.DownArrow || keypressed.Key == ConsoleKey.S)
             {
-                if (startDaySelection != 5)
+                if (startDaySelection == 5)
+                {
+                    ClearSelection();
+                    startDaySelection = 0;
+                    DrawNewSelection();
+                }
+                else
                 {
                     ClearSelection();
                     startDaySelection += 1;
@@ -383,7 +395,7 @@ namespace LemonadeStand
             switch (Convert.ToString(weather))
             {
                 case "0.75":
-                    message = "Today's weather is cloudy and cold. The tempature is 40°.";
+                    message = "Oh no! Its raining!";
                     break;
                 case "1":
                     message = "Today's weather is cloudy. The tempature is 50°.";
