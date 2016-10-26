@@ -10,6 +10,8 @@ namespace LemonadeStand
     {
         public decimal money;
         public int[] tastePreference = new int[3];
+        public bool tooExpensive = false;
+        public bool badTaste = false;
         Random random = new Random();
 
         public void GetMoney()
@@ -64,6 +66,7 @@ namespace LemonadeStand
             }
             else
             {
+                tooExpensive = true;
                 return false;
             }
         }
@@ -76,20 +79,21 @@ namespace LemonadeStand
             }
             else
             {
+                badTaste = true;
                 return false;
             }
         }
         private bool CheckLemons(int[] recipe)
         {
-            return ((tastePreference[0] - 1 <= recipe[0]) && (tastePreference[0] + 1 >= recipe[0]));
+            return ((recipe[0] - 1 <= tastePreference[0]) || (recipe[0] + 1 >= tastePreference[0]) || (recipe[0] == tastePreference[0]));
         }
         private bool CheckSugar(int[] recipe)
         {
-            return ((tastePreference[1] - 1 <= recipe[1]) && (tastePreference[1] + 1 >= recipe[1]));
+            return ((recipe[1] - 1 <= tastePreference[1]) || (recipe[1] + 1 >= tastePreference[1]) || (recipe[1] == tastePreference[1]));
         }
         private bool CheckIce(int[] recipe)
         {
-            return ((tastePreference[2] - 1 <= recipe[2]) && (tastePreference[2] + 1 >= recipe[2]));
+            return ((recipe[2] - 1 <= tastePreference[2]) || (recipe[2] + 1 >= tastePreference[2]) || (recipe[2] == tastePreference[2]));
         }
         //Create Taste Preferences------------------------------------
         public void GetTastePreference()

@@ -13,10 +13,12 @@ namespace LemonadeStand
         UserInterface display;
         Random random = new Random();
         Weather weather = new Weather();
-        float weatherModifier;
         int defaultCustomerAmount = 15;
         public int date;
         float todaysWeather;
+        int badtaste = 0;
+        int tooExpensive = 0;
+        double population = 0;
 
         //---------------------------------------------Phase 1
         public void RunPreparationPhase(Player player, UserInterface display)
@@ -62,7 +64,7 @@ namespace LemonadeStand
         //---------------------------------------------Phase 2
         public void RunSalePhase()
         {
-            double population = GetNumberOfCustomers();
+            population = GetNumberOfCustomers();
             for (int i = 0; i < population; i++)
             {
                 customer = GetCustomerType();
@@ -82,38 +84,45 @@ namespace LemonadeStand
                         player.SellCup();
                         player.salesMade++;
                     }
+                    else if (customer.badTaste)
+                    {
+                        badtaste++;
+                    }
+                    else if (customer.tooExpensive)
+                    {
+                        tooExpensive++;
+                    }
                 }
             }
             RunEndOfDayPhase();
         }
         public void RunEndOfDayPhase()
         {
-            display.DisplayEndOfDayInformation();
+            display.DisplayEndOfDayInformation(tooExpensive, badtaste);
             player.money += player.moneyMade;
             display.DisplayUpperInformation();
             Console.ReadLine();
-
             player.Clear();
         }
         public double GetNumberOfCustomers()
         {
-            return Math.Floor((defaultCustomerAmount * weatherModifier) + date);
+            return Math.Floor((defaultCustomerAmount * todaysWeather) + date);
         }
         public Customer GetCustomerType()
         {
             switch(random.Next(2))
             {
                 case 0:
-                    return new LowerClass();
+                    return new LowerClassCitizen();
 
                 case 1:
-                    return new MiddleClass();
+                    return new MiddleClassCitizen();
 
                 case 2:
-                    return new UpperClass();
+                    return new UpperClassCitizen();
 
                 default:
-                    return new MiddleClass();
+                    return new MiddleClassCitizen();
             }
         }
         //---------------------------------------------Exit

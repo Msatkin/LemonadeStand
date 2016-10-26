@@ -16,6 +16,7 @@ namespace LemonadeStand
 
         public void Start()
         {
+            display.DisplayArt();
             display.date = currentDay;
             display.FormatScreen();
             CreatePlayer();

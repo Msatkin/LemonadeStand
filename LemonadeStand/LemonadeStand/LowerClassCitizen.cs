@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace LemonadeStand
 {
-    class LowerClass : Customer
+    class LowerClassCitizen : Customer
     {
         Random random = new Random();
-        public LowerClass()
+        public LowerClassCitizen()
         {
             money = 5;
             GetMoney();

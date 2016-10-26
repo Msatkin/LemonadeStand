@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace LemonadeStand
 {
-    class MiddleClass : Customer
+    class MiddleClassCitizen : Customer
     {
-        public MiddleClass()
+        public MiddleClassCitizen()
         {
             money = 9;
             GetMoney();

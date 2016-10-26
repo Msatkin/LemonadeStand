@@ -214,7 +214,7 @@ namespace LemonadeStand
         {
             for (int i = 1; i < screenWidth - 1; i++)
             {
-                for (int j = upperHeight + 1; j < (screenHeight - lowerHeight) - 1; j++)
+                for (int j = upperHeight + 1; j < (screenHeight - lowerHeight)/2; j++)
                 {
                     Console.SetCursorPosition(i, j);
                     Console.Write(" ");
@@ -243,7 +243,7 @@ namespace LemonadeStand
             Console.Write("6: Exit the game.");
             SetCursorForInput();
         }
-        public void DisplayEndOfDayInformation()
+        public void DisplayEndOfDayInformation(int tooExpensive, int badTaste)
         {
             ClearMiddle();
             ClearLower();
@@ -252,13 +252,17 @@ namespace LemonadeStand
             int y = 9;
             Console.SetCursorPosition(x, y);
             Console.Write("Today you made ${0}!", player.moneyMade);
+            Console.SetCursorPosition(x, y + 1);
+            Console.Write("You made {0} pitchers, totaling {1} cups of lemonade. You sold {2} cups of lemonade", player.pitchersMade, player.pitchersMade * 12, player.salesMade);
             Console.SetCursorPosition(x, y + 2);
-            Console.Write("You sold {0} cups of lemonade", player.salesMade);
-            Console.SetCursorPosition(x, y + 4);
             int lemonsUsed = (player.recipe[0] * player.pitchersMade);
             int sugarUsed = (player.recipe[1] * player.pitchersMade);
             int iceUsed = (player.recipe[2] * player.salesMade);
             Console.Write("You used {0} lemons, {1} cups of sugar, {2} cubes of ice, and {3} cups.", lemonsUsed, sugarUsed, iceUsed, player.salesMade);
+            Console.SetCursorPosition(x, y + 3);
+            Console.Write("{0} customers found your recipe repulsive.", badTaste);
+            Console.SetCursorPosition(x, y + 4);
+            Console.Write("{0} customers found your prices too expensive.", tooExpensive);
             SetCursorForInput();
         }
         public void DisplayRequest(string message)
@@ -352,6 +356,79 @@ namespace LemonadeStand
                     break;
             }
             return message;
+        }
+        //---------------------------------------------Art
+        public void DisplayArt()
+        {
+            DisplayArtGround();
+            DisplayArtTree();
+            DisplayArtStand();
+        }
+        private void DisplayArtGround()
+        {
+            Console.ForegroundColor = ConsoleColor.DarkRed;
+            for (int i = 1; i < screenWidth - 1; i++)
+            {
+                Console.SetCursorPosition(i, screenHeight - lowerHeight - 1);
+                Console.Write(";");
+            }
+            Console.ForegroundColor = ConsoleColor.Green;
+            for (int i = 1; i < screenWidth - 1; i++)
+            {
+                Console.SetCursorPosition(i, screenHeight - lowerHeight - 2);
+                Console.Write("_");
+            }
+        }
+        private void DisplayArtTree()
+        {
+            Console.ForegroundColor = ConsoleColor.Green;
+            int x = screenWidth - 30;
+            Console.SetCursorPosition(x, screenHeight - lowerHeight - 12);
+            Console.Write("          ******");
+            Console.SetCursorPosition(x, screenHeight - lowerHeight - 11);
+            Console.Write("       *************");
+            Console.SetCursorPosition(x, screenHeight - lowerHeight - 10);
+            Console.Write("    *****************");
+            Console.SetCursorPosition(x, screenHeight - lowerHeight - 9);
+            Console.Write("   *******************");
+            Console.SetCursorPosition(x, screenHeight - lowerHeight - 8);
+            Console.Write("   ********************");
+            Console.SetCursorPosition(x, screenHeight - lowerHeight - 7);
+            Console.ForegroundColor = ConsoleColor.DarkMagenta;
+            Console.Write("      \\\\   //");
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.Write(" ********");
+            Console.SetCursorPosition(x, screenHeight - lowerHeight - 6);
+            Console.ForegroundColor = ConsoleColor.DarkMagenta;
+            Console.Write("       \\\\\\//");
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.Write(" *******");
+            Console.ForegroundColor = ConsoleColor.DarkMagenta;
+            Console.SetCursorPosition(x, screenHeight - lowerHeight - 5);
+            Console.Write("         \\\\\\////");
+            Console.SetCursorPosition(x, screenHeight - lowerHeight - 4);
+            Console.Write("          |||//");
+            Console.SetCursorPosition(x, screenHeight - lowerHeight - 3);
+            Console.Write("          |||||");
+            Console.SetCursorPosition(x + 9, screenHeight - lowerHeight - 2);
+            Console.ForegroundColor = ConsoleColor.DarkMagenta;
+            Console.Write("/|||||\\");
+            Console.ForegroundColor = ConsoleColor.Gray;
+        }
+        private void DisplayArtStand()
+        {
+            int x = screenWidth - 60;
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.SetCursorPosition(x, screenHeight - lowerHeight - 5);
+            Console.Write(" ___");
+            Console.SetCursorPosition(x, screenHeight - lowerHeight - 4);
+            Console.Write("/___\\");
+            Console.SetCursorPosition(x, screenHeight - lowerHeight - 3);
+            Console.Write("|   |");
+            Console.SetCursorPosition(x, screenHeight - lowerHeight - 2);
+            Console.ForegroundColor = ConsoleColor.DarkMagenta;
+            Console.Write("|===|");
+            Console.ForegroundColor = ConsoleColor.Gray;
         }
     }
 }
