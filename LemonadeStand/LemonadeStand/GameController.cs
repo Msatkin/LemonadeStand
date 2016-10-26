@@ -12,11 +12,13 @@ namespace LemonadeStand
         UserInterface display = new UserInterface();
 
         Player player;
+        Audio audioPlayer;
         Day day;
         int currentDay = 1;
 
         public void Start()
         {
+            audioPlayer = new Audio();
             display.random = random;
             display.date = currentDay;
             display.FormatScreen();

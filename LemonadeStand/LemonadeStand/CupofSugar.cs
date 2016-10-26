@@ -8,6 +8,9 @@ namespace LemonadeStand
 {
     class CupofSugar : Item
     {
-
+        public override Item Clone()
+        {
+            return (CupofSugar) this.MemberwiseClone();
+        }
     }
 }

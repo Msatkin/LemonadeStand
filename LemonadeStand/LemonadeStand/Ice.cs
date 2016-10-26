@@ -6,8 +6,11 @@ using System.Threading.Tasks;
 
 namespace LemonadeStand
 {
-    class Ice : Item
+    public class Ice : Item
     {
-
+        public override Item Clone()
+        {
+            return (Ice) this.MemberwiseClone();
+        }
     }
 }

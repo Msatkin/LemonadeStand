@@ -17,6 +17,7 @@ namespace LemonadeStand
         int screenWidth = 115;
         int screenHeight = 40;
         public int date;
+        public int startDaySelection = 0;
 
         public void FormatScreen()
         {
@@ -228,21 +229,65 @@ namespace LemonadeStand
             ClearMiddle();
             ClearLower();
             DisplayUpperInformation();
+            startDaySelection = 0;
             int x = 15;
             int y = 9;
             Console.SetCursorPosition(x, y);
-            Console.Write("1: Check the weather.");
+            Console.Write("-> Check the weather.");
             Console.SetCursorPosition(x, y + 1);
-            Console.Write("2: Buy ingredients.");
+            Console.Write("   Buy ingredients.");
             Console.SetCursorPosition(x, y + 2);
-            Console.Write("3: Set your recipe.");
+            Console.Write("   Set your recipe.");
             Console.SetCursorPosition(x, y + 3);
-            Console.Write("4: Set lemonade cost");
+            Console.Write("   Set lemonade cost");
             Console.SetCursorPosition(x, y + 4);
-            Console.Write("5: Start the day.");
+            Console.Write("   Start the day.");
             Console.SetCursorPosition(x, y + 5);
-            Console.Write("6: Exit the game.");
+            Console.Write("   Exit the game.");
+        }
+        public bool GetStartDaySelection()
+        {
             SetCursorForInput();
+            ConsoleKeyInfo keypressed = Console.ReadKey();
+            if (keypressed.Key == ConsoleKey.UpArrow)
+            {
+                if (startDaySelection != 0)
+                {
+                    ClearSelection();
+                    startDaySelection -= 1;
+                    DrawNewSelection();
+                }
+                return false;
+            }
+            else if (keypressed.Key == ConsoleKey.DownArrow)
+            {
+                if (startDaySelection != 5)
+                {
+                    ClearSelection();
+                    startDaySelection += 1;
+                    DrawNewSelection();
+                }
+                return false;
+            }
+            else if (keypressed.Key == ConsoleKey.Enter)
+            {
+                return true;
+            }
+            return false;
+        }
+        private void ClearSelection()
+        {
+            int x = 15;
+            int y = 9;
+            Console.SetCursorPosition(x, y + startDaySelection);
+            Console.Write("  ");
+        }
+        private void DrawNewSelection()
+        {
+            int x = 15;
+            int y = 9;
+            Console.SetCursorPosition(x, y + startDaySelection);
+            Console.Write("->");
         }
         public void DisplayEndOfDayInformation(int tooExpensive, int badTaste)
         {

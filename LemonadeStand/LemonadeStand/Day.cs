@@ -49,25 +49,43 @@ namespace LemonadeStand
         private bool GetStartOfDayInput()
         {
             display.DisplayStartOfDayChoices();
-            switch (Console.ReadLine())
+            bool exit = false;
+            while(!exit)
             {
-                case "1":
-                    display.DisplayWeather(todaysWeather);
-                    break;
-                case "2":
-                    OpenShop();
-                    break;
-                case "3":
-                    player.GetLemonadeRecipe();
-                    break;
-                case "4":
-                    player.GetCost();
-                    break;
-                case "5":
-                    return true;
-                case "6":
-                    Environment.Exit(0);
-                    break;
+                exit = ChooseSelection();
+            }
+            GetStartOfDayInput();
+            return false;
+        }
+        public bool ChooseSelection()
+        {
+            bool preformAction = display.GetStartDaySelection();
+            if (preformAction)
+            {
+                switch (display.startDaySelection + 1)
+                {
+                    case 1:
+                        display.DisplayWeather(todaysWeather);
+                        display.DisplayStartOfDayChoices();
+                        break;
+                    case 2:
+                        OpenShop();
+                        display.DisplayStartOfDayChoices();
+                        break;
+                    case 3:
+                        player.GetLemonadeRecipe();
+                        display.DisplayStartOfDayChoices();
+                        break;
+                    case 4:
+                        player.GetCost();
+                        display.DisplayStartOfDayChoices();
+                        break;
+                    case 5:
+                        return true;
+                    case 6:
+                        Environment.Exit(0);
+                        break;
+                }
             }
             return false;
         }
@@ -94,13 +112,16 @@ namespace LemonadeStand
                         player.SellCup();
                         player.salesMade++;
                     }
-                    else if (customer.badTaste)
+                    else
                     {
-                        badtaste++;
-                    }
-                    else if (customer.tooExpensive)
-                    {
-                        tooExpensive++;
+                        if (customer.badTaste)
+                        {
+                            badtaste++;
+                        }
+                        if (customer.tooExpensive)
+                        {
+                            tooExpensive++;
+                        }
                     }
                 }
             }
@@ -109,22 +130,10 @@ namespace LemonadeStand
         public void RunEndOfDayPhase()
         {
             display.DisplayEndOfDayInformation(tooExpensive, badtaste);
-            PlayEndofDayAudio();
             player.money += player.moneyMade;
             display.DisplayUpperInformation();
             Console.ReadLine();
             player.Clear();
-        }
-        private void PlayEndofDayAudio()
-        {
-            if (player.salesMade > 0)
-            {
-                Console.Beep();
-            }
-            else
-            {
-                Console.Beep();
-            }
         }
         public double GetNumberOfCustomers()
         {
@@ -132,7 +141,7 @@ namespace LemonadeStand
         }
         public Customer GetCustomerType()
         {
-            switch(random.Next(2))
+            switch(random.Next(3))
             {
                 case 0:
                     return new LowerClassCitizen();

@@ -33,6 +33,7 @@ namespace LemonadeStand
             if (SellItem(0))
             {
                 player.money -= buyAmount * supplyCost[0];
+                Lemon lemon = new Lemon();
                 player.stand.inventory.AddLemons(buyAmount);
             }
             else
@@ -48,7 +49,7 @@ namespace LemonadeStand
             if (SellItem(1))
             {
                 player.money -= buyAmount * supplyCost[1];
-                player.stand.inventory.AddLemons(buyAmount * cupsOfSugarPerPound);
+                player.stand.inventory.AddSugar(buyAmount * cupsOfSugarPerPound);
             }
             else
             {
@@ -63,7 +64,7 @@ namespace LemonadeStand
             if (SellItem(2))
             {
                 player.money -= buyAmount * supplyCost[2];
-                player.stand.inventory.AddLemons(buyAmount * iceCubesPerBag);
+                player.stand.inventory.AddIce(buyAmount * iceCubesPerBag);
             }
             else
             {
@@ -78,12 +79,13 @@ namespace LemonadeStand
             if (SellItem(3))
             {
                 player.money -= buyAmount * supplyCost[3];
-                player.stand.inventory.AddLemons(buyAmount * cupsPerBag);
+                player.stand.inventory.AddCups(buyAmount * cupsPerBag);
             }
             else
             {
                 SellCups();
             }
+            display.DisplayUpperInformation();
         }
         private bool SellItem(int i)
         {

@@ -8,10 +8,10 @@ namespace LemonadeStand
 {
     class Inventory
     {
-        List<Lemon> lemons;
-        List<CupofSugar> sugar;
-        List<Ice> ice;
-        List<Cup> cups;
+        public List<Lemon> lemons;
+        public List<CupofSugar> sugar;
+        public List<Ice> ice;
+        public List<Cup> cups;
         public int[] totalInventory = new int[4] { 0, 0, 0, 0 };
         public Inventory()
         {
