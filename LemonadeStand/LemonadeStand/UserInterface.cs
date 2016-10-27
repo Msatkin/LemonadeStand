@@ -217,7 +217,7 @@ namespace LemonadeStand
         {
             for (int i = 1; i < screenWidth - 1; i++)
             {
-                for (int j = upperHeight + 1; j < (screenHeight)/2; j++)
+                for (int j = upperHeight + 1; j < (screenHeight/2) + 1; j++)
                 {
                     Console.SetCursorPosition(i, j);
                     Console.Write(" ");
@@ -310,7 +310,7 @@ namespace LemonadeStand
             Console.SetCursorPosition(x, y + startDaySelection);
             Console.Write("->");
         }
-        public void DisplayEndOfDayInformation(int tooExpensive, int badTaste)
+        public void DisplayEndOfDayInformation(int[] complaints)
         {
             ClearMiddleDisplay();
             DisplayUpperInformation();
@@ -326,9 +326,15 @@ namespace LemonadeStand
             int iceUsed = (player.recipe[2] * player.salesMade);
             Console.Write("You used {0} lemons, {1} cups of sugar, {2} cubes of ice, and {3} cups.", lemonsUsed, sugarUsed, iceUsed, player.salesMade);
             Console.SetCursorPosition(x, y + 3);
-            Console.Write("{0} customers found your recipe repulsive.", badTaste);
+            Console.Write("{0} customers found your prices too expensive.", complaints[1]);
             Console.SetCursorPosition(x, y + 4);
-            Console.Write("{0} customers found your prices too expensive.", tooExpensive);
+            Console.Write("{0} customers found your recipe repulsive.", complaints[0]);
+            Console.SetCursorPosition(x, y + 5);
+            Console.Write("{0} customers didn't like the amount of lemons.", complaints[2]);
+            Console.SetCursorPosition(x, y + 6);
+            Console.Write("{0} customers didn't like the amount of sugar.", complaints[3]);
+            Console.SetCursorPosition(x, y + 7);
+            Console.Write("{0} customers didn't like the amount of ice cubes.", complaints[4]);
             SetCursorForInput();
         }
         public void DisplayRequest(string message)

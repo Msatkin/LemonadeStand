@@ -18,8 +18,7 @@ namespace LemonadeStand
         public int date;
         float todaysWeather;
         public bool rain = false;
-        int badtaste = 0;
-        int tooExpensive = 0;
+        int[] customerComplaints = new int[5] { 0, 0, 0, 0, 0 };
         double population = 0;
 
         public Day(Player player, UserInterface display)
@@ -115,22 +114,38 @@ namespace LemonadeStand
                     }
                     else
                     {
-                        if (customer.badTaste)
-                        {
-                            badtaste++;
-                        }
-                        if (customer.tooExpensive)
-                        {
-                            tooExpensive++;
-                        }
+                        GetOpinion();
                     }
                 }
             }
             RunEndOfDayPhase();
         }
+        private void GetOpinion()
+        {
+            if (customer.badTaste)
+            {
+                customerComplaints[0]++;
+            }
+            if (customer.tooExpensive)
+            {
+                customerComplaints[1]++;
+            }
+            if (!customer.CheckLemons())
+            {
+                customerComplaints[2]++;
+            }
+            if (!customer.CheckSugar())
+            {
+                customerComplaints[3]++;
+            }
+            if (!customer.CheckIce())
+            {
+                customerComplaints[4]++;
+            }
+        }
         public void RunEndOfDayPhase()
         {
-            display.DisplayEndOfDayInformation(tooExpensive, badtaste);
+            display.DisplayEndOfDayInformation(customerComplaints);
             player.money += player.moneyMade;
             display.DisplayUpperInformation();
             Console.ReadLine();

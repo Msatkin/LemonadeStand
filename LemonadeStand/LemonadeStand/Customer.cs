@@ -16,6 +16,8 @@ namespace LemonadeStand
         public bool tooExpensive = false;
         public bool badTaste = false;
         Random random = new Random();
+        int[] recipe;
+        decimal cost;
 
         public void GetMoney()
         {
@@ -52,7 +54,9 @@ namespace LemonadeStand
         //Check if sale is made---------------------------------------
         public bool CheckSale(decimal cost, int[] recipe)
         {
-            if (CheckCost(cost) && CheckRecipe(recipe))
+            this.cost = cost;
+            this.recipe = recipe;
+            if (CheckCost() && CheckRecipe())
             {
                 return true;
             }
@@ -61,7 +65,7 @@ namespace LemonadeStand
                 return false;
             }
         }
-        private bool CheckCost(decimal cost)
+        private bool CheckCost()
         {
             if (money > cost)
             {
@@ -73,10 +77,10 @@ namespace LemonadeStand
                 return false;
             }
         }
-        private bool CheckRecipe(int[] recipe)
+        private bool CheckRecipe()
         {
 
-            if (CheckLemons(recipe) && CheckSugar(recipe) && CheckIce(recipe))
+            if (CheckLemons() && CheckSugar() && CheckIce())
             {
                 return true;
             }
@@ -86,15 +90,15 @@ namespace LemonadeStand
                 return false;
             }
         }
-        private bool CheckLemons(int[] recipe)
+        public bool CheckLemons()
         {
             return ((recipe[0] - 1 <= tastePreference[0]) || (recipe[0] + 1 >= tastePreference[0]) || (recipe[0] == tastePreference[0]));
         }
-        private bool CheckSugar(int[] recipe)
+        public bool CheckSugar()
         {
             return ((recipe[1] - 1 <= tastePreference[1]) || (recipe[1] + 1 >= tastePreference[1]) || (recipe[1] == tastePreference[1]));
         }
-        private bool CheckIce(int[] recipe)
+        public bool CheckIce()
         {
             return ((recipe[2] - 1 <= tastePreference[2]) || (recipe[2] + 1 >= tastePreference[2]) || (recipe[2] == tastePreference[2]));
         }
