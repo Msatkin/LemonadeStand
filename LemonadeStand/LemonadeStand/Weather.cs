@@ -54,7 +54,7 @@ namespace LemonadeStand
         private bool CanGetWeather()
         {
             xmlConditions = new XmlDocument();
-            xmlConditions.Load(String.Format("http://api.wunderground.com/api/c14e53931211628a/geolookup/conditions/q/{0}.xml", city));
+            xmlConditions.Load(String.Format("http://api.wunderground.com/api/c14e53931211628a/geolookup/conditions/q/{0}.xml", zipCode));
             if (xmlConditions.SelectSingleNode("/response/error") == null)
             {
                 currentWeather = xmlConditions.SelectSingleNode("/response/current_observation/weather").InnerText;
@@ -102,6 +102,5 @@ namespace LemonadeStand
             float weather = weatherType + tempatureLevel;
             return weather;
         }
-
     }
 }
