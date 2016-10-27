@@ -11,9 +11,8 @@ namespace LemonadeStand
         Random random = new Random();
         public LowerClassCitizen()
         {
-            money = 5;
+            money = 4;
             GetMoney();
-
         }
     }
 }

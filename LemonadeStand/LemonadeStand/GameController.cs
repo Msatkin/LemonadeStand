@@ -9,7 +9,7 @@ namespace LemonadeStand
     class GameController
     {
         Random random = new Random();
-        UserInterface display = new UserInterface();
+        UserInterface display;
 
         Player player;
         Audio audioPlayer;
@@ -19,9 +19,7 @@ namespace LemonadeStand
         public void Start()
         {
             audioPlayer = new Audio();
-            display.random = random;
-            display.date = currentDay;
-            display.FormatScreen();
+            display = new UserInterface(random);
             CreatePlayer();
             display.DisplayUpperInformation();
             //Run for each new day

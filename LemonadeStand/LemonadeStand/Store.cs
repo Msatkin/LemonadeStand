@@ -30,11 +30,10 @@ namespace LemonadeStand
             string message = String.Format("The current cost of lemons is ${0} each.", supplyCost[0]);
             string messageTwo = "How many lemons do you wish to buy?";
             display.DisplayRequest(message, messageTwo);
-            if (SellItem(0))
+            if (CanBuyItem(0))
             {
                 player.money -= buyAmount * supplyCost[0];
-                Lemon lemon = new Lemon();
-                player.stand.inventory.AddLemons(buyAmount);
+                player.stand.AddLemons(buyAmount);
             }
             else
             {
@@ -46,10 +45,10 @@ namespace LemonadeStand
             string message = String.Format("Sugar is ${0} per pound. There are {1} cups in each pound.", supplyCost[1],cupsOfSugarPerPound);
             string messageTwo = "How many bags of sugar do you wish to buy?";
             display.DisplayRequest(message, messageTwo);
-            if (SellItem(1))
+            if (CanBuyItem(1))
             {
                 player.money -= buyAmount * supplyCost[1];
-                player.stand.inventory.AddSugar(buyAmount * cupsOfSugarPerPound);
+                player.stand.AddSugar(buyAmount * cupsOfSugarPerPound);
             }
             else
             {
@@ -61,10 +60,10 @@ namespace LemonadeStand
             string message = String.Format("Bags of ice cost ${0} and provide you with {1} ice cubes.", supplyCost[2], iceCubesPerBag);
             string messageTwo = "How many bags of ice do you wish to buy?";
             display.DisplayRequest(message, messageTwo);
-            if (SellItem(2))
+            if (CanBuyItem(2))
             {
                 player.money -= buyAmount * supplyCost[2];
-                player.stand.inventory.AddIce(buyAmount * iceCubesPerBag);
+                player.stand.AddIce(buyAmount * iceCubesPerBag);
             }
             else
             {
@@ -76,10 +75,10 @@ namespace LemonadeStand
             string message = String.Format("Packs of cups cost ${0} and provide you with {1} cups.", supplyCost[3], cupsPerBag);
             string messageTwo = "How many cups do you wish to buy?";
             display.DisplayRequest(message, messageTwo);
-            if (SellItem(3))
+            if (CanBuyItem(3))
             {
                 player.money -= buyAmount * supplyCost[3];
-                player.stand.inventory.AddCups(buyAmount * cupsPerBag);
+                player.stand.AddCups(buyAmount * cupsPerBag);
             }
             else
             {
@@ -87,7 +86,7 @@ namespace LemonadeStand
             }
             display.DisplayUpperInformation();
         }
-        private bool SellItem(int i)
+        private bool CanBuyItem(int i)
         {
             if (int.TryParse(Console.ReadLine(), out buyAmount))
             {

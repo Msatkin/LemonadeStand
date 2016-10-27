@@ -8,9 +8,5 @@ namespace LemonadeStand
 {
     public class Item
     {
-        public virtual Item Clone()
-        {
-            return (Item)this.MemberwiseClone();
-        }
     }
 }

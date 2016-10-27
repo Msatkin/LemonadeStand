@@ -10,9 +10,8 @@ namespace LemonadeStand
     {
         public UpperClassCitizen()
         {
-            money = 13;
+            money = 9;
             GetMoney();
-
         }
     }
 }

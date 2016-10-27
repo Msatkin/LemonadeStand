@@ -37,19 +37,19 @@ namespace LemonadeStand
         //---------------------------------------------
         public void MakeDrinks()
         {
-            if (stand.inventory.totalInventory[0] >= recipe[0] && stand.inventory.totalInventory[1] >= recipe[1])
+            if (stand.inventory.lemons.Count() >= recipe[0] && stand.inventory.sugar.Count() >= recipe[1])
             {
                 drinks += 12;
-                stand.inventory.totalInventory[0] -= recipe[0];
-                stand.inventory.totalInventory[1] -= recipe[1];
+                stand.RemoveLemons(recipe[0]);
+                stand.RemoveSugar(recipe[1]);
                 pitchersMade++;
             }
         }
         public void SellCup()
         {
             drinks -= 1;
-            stand.inventory.totalInventory[2] -= recipe[2];
-            stand.inventory.totalInventory[3] -= 1;
+            stand.RemoveIce(recipe[2]);
+            stand.RemoveCups(1);
             moneyMade += costPerCup;
         }
         //---------------------------------------------
@@ -67,7 +67,7 @@ namespace LemonadeStand
             bool exit = false;
             while (!exit)
             {
-                display.ClearMiddle();
+                display.ClearMiddleDisplay();
                 display.ClearLower();
                 display.DisplayUpperInformation();
                 display.DisplayRequest(message);
@@ -89,7 +89,7 @@ namespace LemonadeStand
             bool exit = false;
             while (!exit)
             {
-                display.ClearMiddle();
+                display.ClearMiddleDisplay();
                 display.ClearLower();
                 display.DisplayUpperInformation();
                 display.DisplayRequest("How much would you like to charge per cup of lemonade?");

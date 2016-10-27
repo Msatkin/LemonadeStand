@@ -21,12 +21,14 @@ namespace LemonadeStand
         int badtaste = 0;
         int tooExpensive = 0;
         double population = 0;
+
         public Day(Player player, UserInterface display)
         {
             this.player = player;
             this.display = display;
+            display.weather = weather;
             store = new Store(player);
-            todaysWeather = weather.GetWeather();
+            todaysWeather = weather.GetCurrentConditions();
             display.DisplayArt(todaysWeather);
         }
         //---------------------------------------------Phase 1
@@ -53,33 +55,38 @@ namespace LemonadeStand
         }
         public bool ChooseSelection()
         {
-            bool preformAction = display.GetStartDaySelection();
-            if (preformAction)
+            bool actionChoosen = display.GetStartDaySelection();
+            if (actionChoosen)
             {
-                switch (display.startDaySelection + 1)
-                {
-                    case 1:
-                        display.DisplayWeather(todaysWeather);
-                        display.DisplayStartOfDayChoices();
-                        break;
-                    case 2:
-                        OpenShop();
-                        display.DisplayStartOfDayChoices();
-                        break;
-                    case 3:
-                        player.GetLemonadeRecipe();
-                        display.DisplayStartOfDayChoices();
-                        break;
-                    case 4:
-                        player.GetCost();
-                        display.DisplayStartOfDayChoices();
-                        break;
-                    case 5:
-                        return true;
-                    case 6:
-                        Environment.Exit(0);
-                        break;
-                }
+                return PreformAction();
+            }
+            return false;
+        }
+        public bool PreformAction()
+        {
+            switch (display.startDaySelection + 1)
+            {
+                case 1:
+                    display.DisplayWeather(todaysWeather);
+                    display.DisplayStartOfDayChoices();
+                    break;
+                case 2:
+                    OpenShop();
+                    display.DisplayStartOfDayChoices();
+                    break;
+                case 3:
+                    player.GetLemonadeRecipe();
+                    display.DisplayStartOfDayChoices();
+                    break;
+                case 4:
+                    player.GetCost();
+                    display.DisplayStartOfDayChoices();
+                    break;
+                case 5:
+                    return true;
+                case 6:
+                    Environment.Exit(0);
+                    break;
             }
             return false;
         }
@@ -97,7 +104,7 @@ namespace LemonadeStand
                     player.MakeDrinks();
                 }
                 //Has enough materials
-                if (player.drinks > 0 && player.stand.inventory.totalInventory[2] >= player.recipe[2] && player.stand.inventory.totalInventory[3] > 0)
+                if (player.drinks > 0 && player.stand.inventory.ice.Count() >= player.recipe[2] && player.stand.inventory.cups.Count() > 0)
                 {
                     //Customer is interested
                     bool cupSold = customer.CheckSale(player.costPerCup, player.recipe);

@@ -8,9 +8,5 @@ namespace LemonadeStand
 {
     public class Lemon : Item
     {
-        public override Item Clone()
-        {
-            return (Lemon) this.MemberwiseClone();
-        }
     }
 }

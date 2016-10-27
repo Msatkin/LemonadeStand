@@ -17,7 +17,6 @@ namespace LemonadeStand
 
         private void PlayMusic()
         {
-
             SoundPlayer audioplayer = new SoundPlayer();
             audioplayer.SoundLocation = "background.wav";
             audioplayer.PlayLooping();

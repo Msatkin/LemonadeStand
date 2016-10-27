@@ -10,6 +10,9 @@ namespace LemonadeStand
     {
         public decimal money;
         public int[] tastePreference = new int[3];
+        int averageLemonPreference = 6;
+        int averageSugarPreference = 4;
+        int averageIcePreference = 4;
         public bool tooExpensive = false;
         public bool badTaste = false;
         Random random = new Random();
@@ -98,104 +101,40 @@ namespace LemonadeStand
         //Create Taste Preferences------------------------------------
         public void GetTastePreference()
         {
-            GetLemonPreference();
-            GetSugarPreference();
-            GetIcePreference();
+            GetItemPreference(averageLemonPreference);
+            GetItemPreference(averageSugarPreference);
+            GetItemPreference(averageIcePreference);
         }
-        public void GetLemonPreference()
+        public void GetItemPreference(int average)
         {
             int choice = random.Next(1, 100);
             if (choice < 5)
             {
-                tastePreference[0] = 3;
+                tastePreference[0] = average - 3;
             }
             else if (choice < 15)
             {
-                tastePreference[0] = 4;
+                tastePreference[0] = average - 2;
             }
             else if (choice < 35)
             {
-                tastePreference[0] = 5;
+                tastePreference[0] = average - 1;
             }
             else if (choice < 65)
             {
-                tastePreference[0] = 6;
+                tastePreference[0] = average;
             }
             else if (choice < 85)
             {
-                tastePreference[0] = 7;
+                tastePreference[0] = average + 1;
             }
             else if (choice < 95)
             {
-                tastePreference[0] = 8;
+                tastePreference[0] = average + 2;
             }
             else
             {
-                tastePreference[0] = 9;
-            }
-        }
-        public void GetSugarPreference()
-        {
-            int choice = random.Next(1, 100);
-            if (choice < 5)
-            {
-                tastePreference[1] = 1;
-            }
-            else if (choice < 15)
-            {
-                tastePreference[1] = 2;
-            }
-            else if (choice < 35)
-            {
-                tastePreference[1] = 3;
-            }
-            else if (choice < 65)
-            {
-                tastePreference[1] = 4;
-            }
-            else if (choice < 85)
-            {
-                tastePreference[1] = 5;
-            }
-            else if (choice < 95)
-            {
-                tastePreference[1] = 6;
-            }
-            else
-            {
-                tastePreference[1] = 7;
-            }
-        }
-        public void GetIcePreference()
-        {
-            int choice = random.Next(1, 100);
-            if (choice < 5)
-            {
-                tastePreference[2] = 1;
-            }
-            else if (choice < 15)
-            {
-                tastePreference[2] = 2;
-            }
-            else if (choice < 35)
-            {
-                tastePreference[2] = 3;
-            }
-            else if (choice < 65)
-            {
-                tastePreference[2] = 4;
-            }
-            else if (choice < 85)
-            {
-                tastePreference[2] = 5;
-            }
-            else if (choice < 95)
-            {
-                tastePreference[2] = 6;
-            }
-            else
-            {
-                tastePreference[2] = 7;
+                tastePreference[0] = average + 3;
             }
         }
     }

@@ -9,6 +9,7 @@ namespace LemonadeStand
     class UserInterface
     {
         public Player player;
+        public Weather weather;
         public Random random;
         public string message;
         public bool update = false;
@@ -19,6 +20,12 @@ namespace LemonadeStand
         public int date;
         public int startDaySelection = 0;
 
+        public UserInterface(Random random)
+        {
+            this.random = random;
+            FormatScreen();
+            Console.OutputEncoding = System.Text.Encoding.GetEncoding(1252);
+        }
         public void FormatScreen()
         {
             Console.SetWindowSize(screenWidth, screenHeight);
@@ -63,10 +70,6 @@ namespace LemonadeStand
             }
         }
         //---------------------------------------------Display lower section
-        public void DisplayLowerInformation()
-        {
-
-        }
         public void ClearLower()
         {
             for (int i = 1; i < screenWidth - 1; i++)
@@ -103,11 +106,11 @@ namespace LemonadeStand
             WriteName(margin);
             WriteDay(margin);
             DrawUpperLine(lineOne);
-            WriteInventory(lineOne + margin);
+            DisplayInventory(lineOne + margin);
             DrawUpperLine(lineTwo);
-            WriteMoney(lineTwo + margin);
+            DisplayMoney(lineTwo + margin);
             DrawUpperLine(lineThree);
-            WriteProfit(lineThree + margin);
+            DisplayProfit(lineThree + margin);
             DrawUpperLine(lineFour);
             WriteRecipe(lineFour + margin);
             SetCursorForInput();
@@ -130,33 +133,45 @@ namespace LemonadeStand
                 Console.Write("|");
             }
         }
-        private void WriteInventory(int x)
+        private void DisplayInventory(int x)
         {
-            //Write lemon amount
+            DisplayLemonAmount(x);
+            DisplaySugarAmount(x);
+            DisplayIceAmount(x);
+            DisplayCupAmount(x);
+        }
+        private void DisplayLemonAmount(int x)
+        {
             Console.SetCursorPosition(x, 1);
             Console.Write("Lemons         : ");
-            Console.Write(player.stand.inventory.totalInventory[0]);
-            //Write sugar amount
+            Console.Write(player.stand.inventory.lemons.Count());
+        }
+        private void DisplaySugarAmount(int x)
+        {
             Console.SetCursorPosition(x, 2);
             Console.Write("Cups of sugar  : ");
-            Console.Write(player.stand.inventory.totalInventory[1]);
-            //Write ice amount
+            Console.Write(player.stand.inventory.sugar.Count());
+        }
+        private void DisplayIceAmount(int x)
+        {
             Console.SetCursorPosition(x, 3);
             Console.Write("Cubes of Ice   : ");
-            Console.Write(player.stand.inventory.totalInventory[2]);
-            //Write cup amount
+            Console.Write(player.stand.inventory.ice.Count());
+        }
+        private void DisplayCupAmount(int x)
+        {
             Console.SetCursorPosition(x, 4);
             Console.Write("Cups           : ");
-            Console.Write(player.stand.inventory.totalInventory[3]);
+            Console.Write(player.stand.inventory.cups.Count());
         }
-        private void WriteMoney(int x)
+        private void DisplayMoney(int x)
         {
             Console.SetCursorPosition(x, 1);
             Console.Write("Money");
             Console.SetCursorPosition(x, 3);
             Console.Write("$" + player.money);
         }
-        private void WriteProfit(int x)
+        private void DisplayProfit(int x)
         {
             Console.SetCursorPosition(x, 1);
             Console.Write("Net Profit");
@@ -177,7 +192,12 @@ namespace LemonadeStand
         {
             Console.SetCursorPosition(x + 4, 1);
             Console.Write("Recipe");
-            //Write lemon amount
+            DisplayRecipeLemons(x);
+            DisplayRecipeSugar(x);
+            DisplayRecipeIce(x);
+        }
+        private void DisplayRecipeLemons(int x)
+        {
             Console.SetCursorPosition(x, 2);
             Console.Write("Lemons         : ");
             if (player.recipe[0] == 0)
@@ -186,9 +206,11 @@ namespace LemonadeStand
             }
             else
             {
-            Console.Write(player.recipe[0]);
+                Console.Write(player.recipe[0]);
             }
-            //Write sugar amount
+        }
+        private void DisplayRecipeSugar(int x)
+        {
             Console.SetCursorPosition(x, 3);
             Console.Write("Cups of sugar  : ");
             if (player.recipe[1] == 0)
@@ -199,7 +221,9 @@ namespace LemonadeStand
             {
                 Console.Write(player.recipe[1]);
             }
-            //Write ice amount
+        }
+        private void DisplayRecipeIce(int x)
+        {
             Console.SetCursorPosition(x, 4);
             Console.Write("Cubes of Ice   : ");
             if (player.recipe[2] == 0)
@@ -212,7 +236,7 @@ namespace LemonadeStand
             }
         }
         //---------------------------------------------Display middle section
-        public void ClearMiddle()
+        public void ClearMiddleDisplay()
         {
             for (int i = 1; i < screenWidth - 1; i++)
             {
@@ -224,9 +248,10 @@ namespace LemonadeStand
             }
             Console.SetWindowPosition(0, 0);
         }
+        //Start of Day selections
         public void DisplayStartOfDayChoices()
         {
-            ClearMiddle();
+            ClearMiddleDisplay();
             ClearLower();
             DisplayUpperInformation();
             startDaySelection = 0;
@@ -251,34 +276,12 @@ namespace LemonadeStand
             ConsoleKeyInfo keypressed = Console.ReadKey();
             if (keypressed.Key == ConsoleKey.UpArrow || keypressed.Key == ConsoleKey.W)
             {
-                if (startDaySelection == 0)
-                {
-                    ClearSelection();
-                    startDaySelection = 5;
-                    DrawNewSelection();
-                }
-                else
-                {
-                    ClearSelection();
-                    startDaySelection -= 1;
-                    DrawNewSelection();
-                }
+                MoveStartDaySelectionUp();
                 return false;
             }
             else if (keypressed.Key == ConsoleKey.DownArrow || keypressed.Key == ConsoleKey.S)
             {
-                if (startDaySelection == 5)
-                {
-                    ClearSelection();
-                    startDaySelection = 0;
-                    DrawNewSelection();
-                }
-                else
-                {
-                    ClearSelection();
-                    startDaySelection += 1;
-                    DrawNewSelection();
-                }
+                MoveStartDaySelectionDown();
                 return false;
             }
             else if (keypressed.Key == ConsoleKey.Enter)
@@ -286,6 +289,36 @@ namespace LemonadeStand
                 return true;
             }
             return false;
+        }
+        private void MoveStartDaySelectionUp()
+        {
+            if (startDaySelection == 0)
+            {
+                ClearSelection();
+                startDaySelection = 5;
+                DrawNewSelection();
+            }
+                else
+                {
+                ClearSelection();
+                startDaySelection -= 1;
+                DrawNewSelection();
+            }
+        }
+        private void MoveStartDaySelectionDown()
+        {
+            if (startDaySelection == 5)
+            {
+                ClearSelection();
+                startDaySelection = 0;
+                DrawNewSelection();
+            }
+            else
+            {
+                ClearSelection();
+                startDaySelection += 1;
+                DrawNewSelection();
+            }
         }
         private void ClearSelection()
         {
@@ -303,7 +336,7 @@ namespace LemonadeStand
         }
         public void DisplayEndOfDayInformation(int tooExpensive, int badTaste)
         {
-            ClearMiddle();
+            ClearMiddleDisplay();
             ClearLower();
             DisplayUpperInformation();
             int x = 15;
@@ -331,7 +364,7 @@ namespace LemonadeStand
         }
         public void DisplayRequest(string message, string messageTwo)
         {
-            ClearMiddle();
+            ClearMiddleDisplay();
             ClearLower();
             DisplayUpperInformation();
             SetCursorForDisplay();
@@ -342,7 +375,7 @@ namespace LemonadeStand
         }
         public void DisplayNoMoneyError()
         {
-            ClearMiddle();
+            ClearMiddleDisplay();
             SetCursorForDisplay();
             Console.Write("You do not have enough money.");
             SetCursorForInput();
@@ -350,7 +383,7 @@ namespace LemonadeStand
         }
         public void DisplayEnterNumberError()
         {
-            ClearMiddle();
+            ClearMiddleDisplay();
             SetCursorForDisplay();
             Console.Write("Please enter a whole number.");
             SetCursorForInput();
@@ -358,7 +391,7 @@ namespace LemonadeStand
         }
         public void DisplayCostNumberError()
         {
-            ClearMiddle();
+            ClearMiddleDisplay();
             SetCursorForDisplay();
             Console.Write("Please enter a number.");
             SetCursorForInput();
@@ -380,15 +413,24 @@ namespace LemonadeStand
             SetCursorForInput();
             player.name = Console.ReadLine();
             ClearLower();
+            ClearMiddleDisplay();
         }
         //---------------------------------------------Weather
         public void DisplayWeather(float weather)
         {
-            ClearMiddle();
+            ClearMiddleDisplay();
             ClearLower();
             SetCursorForDisplay();
+            if (this.weather.actualWeather)
+            {
+                Console.Write("Today's weather is {0} with a tempature of {1}°.",this.weather.currentWeather.ToLower(),this.weather.currentTemperature);
+                Console.ReadLine();
+            }
+            else
+            {
             Console.Write(GetWeatherMessage(weather));
             Console.ReadLine();
+            }
         }
         private string GetWeatherMessage(float weather)
         {
@@ -434,17 +476,10 @@ namespace LemonadeStand
         public void DisplayArt(float weather)
         {
             ClearArt();
-            if (weather < 1)
+            if (weather == 0)
             {
                 ClearArt();
                 DisplayArtRain();
-                DisplayArtGround();
-                DisplayArtTree();
-                DisplayArtStand();
-            }
-            else if (weather < 1.75)
-            {
-                ClearArt();
                 DisplayArtGround();
                 DisplayArtTree();
                 DisplayArtStand();
@@ -517,10 +552,16 @@ namespace LemonadeStand
             Console.SetCursorPosition(x, screenHeight - lowerHeight - 4);
             Console.Write("/___\\");
             Console.SetCursorPosition(x, screenHeight - lowerHeight - 3);
-            Console.Write("|   |");
+            Console.Write("|");
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.Write("...");
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.Write("|");
             Console.SetCursorPosition(x, screenHeight - lowerHeight - 2);
             Console.ForegroundColor = ConsoleColor.DarkMagenta;
-            Console.Write("|===|");
+            Console.BackgroundColor = ConsoleColor.DarkRed;
+            Console.Write("     ");
+            Console.BackgroundColor = ConsoleColor.Black;
             Console.ForegroundColor = ConsoleColor.Gray;
         }
         private void DisplayArtRain()
