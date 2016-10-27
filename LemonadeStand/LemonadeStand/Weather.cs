@@ -20,7 +20,6 @@ namespace LemonadeStand
         public bool actualWeather = true;
         public float GetCurrentConditions()
         {
-            string city;
             xmlLocation = new XmlDocument();
             xmlLocation.Load("http://ip-api.com/xml");
             if (!CanGetLocation())

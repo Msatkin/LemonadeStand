@@ -14,9 +14,8 @@ namespace LemonadeStand
         public string message;
         public bool update = false;
         int upperHeight = 5;
-        int lowerHeight = 10;
         int screenWidth = 115;
-        int screenHeight = 40;
+        int screenHeight = 30;
         public int date;
         public int startDaySelection = 0;
 
@@ -24,7 +23,7 @@ namespace LemonadeStand
         {
             this.random = random;
             FormatScreen();
-            Console.OutputEncoding = System.Text.Encoding.GetEncoding(1252);
+            Console.SetWindowPosition(0, 0);
         }
         public void FormatScreen()
         {
@@ -36,7 +35,6 @@ namespace LemonadeStand
         {
             DrawBorder();
             DrawUpperDivider();
-            DrawLowerDivider();
             Console.SetWindowPosition(0, 0);
         }
         private void DrawBorder()
@@ -60,27 +58,6 @@ namespace LemonadeStand
                 Console.SetCursorPosition(i, upperHeight);
                 Console.Write("_");
             }
-        }
-        private void DrawLowerDivider()
-        {
-            for (int i = 1; i < screenWidth - 1; i++)
-            {
-                Console.SetCursorPosition(i, screenHeight - lowerHeight);
-                Console.Write("_");
-            }
-        }
-        //---------------------------------------------Display lower section
-        public void ClearLower()
-        {
-            for (int i = 1; i < screenWidth - 1; i++)
-            {
-                for (int j = (screenHeight - lowerHeight) + 1; j < screenHeight - 1; j++)
-                {
-                    Console.SetCursorPosition(i, j);
-                    Console.Write(" ");
-                }
-            }
-            Console.SetWindowPosition(0, 0);
         }
         //---------------------------------------------Display upper section
         public void ClearUpper()
@@ -240,7 +217,7 @@ namespace LemonadeStand
         {
             for (int i = 1; i < screenWidth - 1; i++)
             {
-                for (int j = upperHeight + 1; j < (screenHeight - lowerHeight)/2; j++)
+                for (int j = upperHeight + 1; j < (screenHeight)/2; j++)
                 {
                     Console.SetCursorPosition(i, j);
                     Console.Write(" ");
@@ -252,7 +229,6 @@ namespace LemonadeStand
         public void DisplayStartOfDayChoices()
         {
             ClearMiddleDisplay();
-            ClearLower();
             DisplayUpperInformation();
             startDaySelection = 0;
             int x = 15;
@@ -272,7 +248,7 @@ namespace LemonadeStand
         }
         public bool GetStartDaySelection()
         {
-            SetCursorForInput();
+            Console.SetCursorPosition(0, 0);
             ConsoleKeyInfo keypressed = Console.ReadKey();
             if (keypressed.Key == ConsoleKey.UpArrow || keypressed.Key == ConsoleKey.W)
             {
@@ -337,7 +313,6 @@ namespace LemonadeStand
         public void DisplayEndOfDayInformation(int tooExpensive, int badTaste)
         {
             ClearMiddleDisplay();
-            ClearLower();
             DisplayUpperInformation();
             int x = 15;
             int y = 9;
@@ -365,7 +340,6 @@ namespace LemonadeStand
         public void DisplayRequest(string message, string messageTwo)
         {
             ClearMiddleDisplay();
-            ClearLower();
             DisplayUpperInformation();
             SetCursorForDisplay();
             Console.Write(message);
@@ -404,7 +378,7 @@ namespace LemonadeStand
         //---------------------------------------------Input
         public void SetCursorForInput()
         {
-            Console.SetCursorPosition(4, 33);
+            Console.SetCursorPosition(15, 11);
         }
         public void GetPlayerName()
         {
@@ -412,14 +386,12 @@ namespace LemonadeStand
             Console.Write("Enter your name.");
             SetCursorForInput();
             player.name = Console.ReadLine();
-            ClearLower();
             ClearMiddleDisplay();
         }
         //---------------------------------------------Weather
         public void DisplayWeather(float weather)
         {
             ClearMiddleDisplay();
-            ClearLower();
             SetCursorForDisplay();
             if (this.weather.actualWeather)
             {
@@ -465,7 +437,7 @@ namespace LemonadeStand
         {
             for (int i = 1; i < screenWidth - 1; i++)
             {
-                for (int j = ((screenHeight - lowerHeight) / 2) + 1; j < (screenHeight - lowerHeight); j++)
+                for (int j = (screenHeight / 2) + 1; j < screenHeight; j++)
                 {
                     Console.SetCursorPosition(i, j);
                     Console.Write(" ");
@@ -497,13 +469,13 @@ namespace LemonadeStand
             Console.ForegroundColor = ConsoleColor.DarkRed;
             for (int i = 1; i < screenWidth - 1; i++)
             {
-                Console.SetCursorPosition(i, screenHeight - lowerHeight - 1);
-                Console.Write(";");
+                Console.SetCursorPosition(i, screenHeight - 1);
+                Console.Write("M");
             }
             Console.ForegroundColor = ConsoleColor.Green;
             for (int i = 1; i < screenWidth - 1; i++)
             {
-                Console.SetCursorPosition(i, screenHeight - lowerHeight - 2);
+                Console.SetCursorPosition(i, screenHeight - 2);
                 Console.Write("_");
             }
         }
@@ -511,34 +483,34 @@ namespace LemonadeStand
         {
             Console.ForegroundColor = ConsoleColor.Green;
             int x = screenWidth - 30;
-            Console.SetCursorPosition(x, screenHeight - lowerHeight - 12);
+            Console.SetCursorPosition(x, screenHeight- 12);
             Console.Write("          ******");
-            Console.SetCursorPosition(x, screenHeight - lowerHeight - 11);
+            Console.SetCursorPosition(x, screenHeight- 11);
             Console.Write("       *************");
-            Console.SetCursorPosition(x, screenHeight - lowerHeight - 10);
+            Console.SetCursorPosition(x, screenHeight- 10);
             Console.Write("    *****************");
-            Console.SetCursorPosition(x, screenHeight - lowerHeight - 9);
+            Console.SetCursorPosition(x, screenHeight- 9);
             Console.Write("   *******************");
-            Console.SetCursorPosition(x, screenHeight - lowerHeight - 8);
+            Console.SetCursorPosition(x, screenHeight- 8);
             Console.Write("   ********************");
-            Console.SetCursorPosition(x, screenHeight - lowerHeight - 7);
+            Console.SetCursorPosition(x, screenHeight- 7);
             Console.ForegroundColor = ConsoleColor.DarkMagenta;
             Console.Write("      \\\\   //");
             Console.ForegroundColor = ConsoleColor.Green;
             Console.Write(" ********");
-            Console.SetCursorPosition(x, screenHeight - lowerHeight - 6);
+            Console.SetCursorPosition(x, screenHeight- 6);
             Console.ForegroundColor = ConsoleColor.DarkMagenta;
             Console.Write("       \\\\\\//");
             Console.ForegroundColor = ConsoleColor.Green;
             Console.Write(" *******");
             Console.ForegroundColor = ConsoleColor.DarkMagenta;
-            Console.SetCursorPosition(x, screenHeight - lowerHeight - 5);
+            Console.SetCursorPosition(x, screenHeight - 5);
             Console.Write("         \\\\\\////");
-            Console.SetCursorPosition(x, screenHeight - lowerHeight - 4);
+            Console.SetCursorPosition(x, screenHeight - 4);
             Console.Write("          |||//");
-            Console.SetCursorPosition(x, screenHeight - lowerHeight - 3);
+            Console.SetCursorPosition(x, screenHeight - 3);
             Console.Write("          |||||");
-            Console.SetCursorPosition(x + 9, screenHeight - lowerHeight - 2);
+            Console.SetCursorPosition(x + 9, screenHeight - 2);
             Console.ForegroundColor = ConsoleColor.DarkMagenta;
             Console.Write("/|||||\\");
             Console.ForegroundColor = ConsoleColor.Gray;
@@ -547,17 +519,17 @@ namespace LemonadeStand
         {
             int x = screenWidth - 60;
             Console.ForegroundColor = ConsoleColor.White;
-            Console.SetCursorPosition(x, screenHeight - lowerHeight - 5);
+            Console.SetCursorPosition(x, screenHeight - 5);
             Console.Write(" ___");
-            Console.SetCursorPosition(x, screenHeight - lowerHeight - 4);
+            Console.SetCursorPosition(x, screenHeight - 4);
             Console.Write("/___\\");
-            Console.SetCursorPosition(x, screenHeight - lowerHeight - 3);
+            Console.SetCursorPosition(x, screenHeight - 3);
             Console.Write("|");
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.Write("...");
             Console.ForegroundColor = ConsoleColor.White;
             Console.Write("|");
-            Console.SetCursorPosition(x, screenHeight - lowerHeight - 2);
+            Console.SetCursorPosition(x, screenHeight - 2);
             Console.ForegroundColor = ConsoleColor.DarkMagenta;
             Console.BackgroundColor = ConsoleColor.DarkRed;
             Console.Write("     ");
@@ -568,7 +540,7 @@ namespace LemonadeStand
         {
             for (int i = 1; i < screenWidth - 1; i++)
             {
-                for (int j = ((screenHeight - lowerHeight) / 2) + 1; j < (screenHeight - lowerHeight); j++)
+                for (int j = (screenHeight / 2) + 1; j < screenHeight; j++)
                 {
                     Console.SetCursorPosition(i, j);
                     if (random.Next(5) == 1)

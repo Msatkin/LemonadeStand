@@ -44,6 +44,7 @@ namespace LemonadeStand
             player.random = random;
             display.player = player;
             display.GetPlayerName();
+            player.name = player.name.Substring(0, Math.Min(13, player.name.Length));
         }
     }
 }

@@ -68,7 +68,6 @@ namespace LemonadeStand
             while (!exit)
             {
                 display.ClearMiddleDisplay();
-                display.ClearLower();
                 display.DisplayUpperInformation();
                 display.DisplayRequest(message);
                 string response = Console.ReadLine();
@@ -90,7 +89,6 @@ namespace LemonadeStand
             while (!exit)
             {
                 display.ClearMiddleDisplay();
-                display.ClearLower();
                 display.DisplayUpperInformation();
                 display.DisplayRequest("How much would you like to charge per cup of lemonade?");
                 string response = Console.ReadLine();
