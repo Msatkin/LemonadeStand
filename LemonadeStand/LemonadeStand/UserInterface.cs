@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 
 namespace LemonadeStand
 {
@@ -10,12 +10,13 @@ namespace LemonadeStand
     {
         public Player player;
         public Weather weather;
+        public GameController game;
         public Random random;
         public string message;
         public bool update = false;
         int upperHeight = 5;
-        int screenWidth = 115;
-        int screenHeight = 30;
+        public int screenWidth = 115;
+        public int screenHeight = 30;
         public int date;
         public int startDaySelection = 0;
 
@@ -28,7 +29,10 @@ namespace LemonadeStand
         public void FormatScreen()
         {
             Console.SetWindowSize(screenWidth, screenHeight);
-            DrawBaseScreen();
+            lock (GameController.thisLock)
+            {
+                DrawBaseScreen();
+            }
         }
         //---------------------------------------------Draw base screen features
         public void DrawBaseScreen()
@@ -39,6 +43,7 @@ namespace LemonadeStand
         }
         private void DrawBorder()
         {
+            Console.Clear();
             for (int i = 0; i < screenWidth; i++)
             {
                 for (int j = 0; j < screenHeight; j++)
@@ -57,6 +62,14 @@ namespace LemonadeStand
             {
                 Console.SetCursorPosition(i, upperHeight);
                 Console.Write("_");
+            }
+        }
+        private void DrawUpperLine(int x)
+        {
+            for (int i = 1; i < upperHeight; i++)
+            {
+                Console.SetCursorPosition(x, i);
+                Console.Write("|");
             }
         }
         //---------------------------------------------Display upper section
@@ -102,14 +115,7 @@ namespace LemonadeStand
             Console.SetCursorPosition(x, 3);
             Console.Write("Day: " + date);
         }
-        private void DrawUpperLine(int x)
-        {
-            for (int i = 1; i < upperHeight; i++)
-            {
-                Console.SetCursorPosition(x, i);
-                Console.Write("|");
-            }
-        }
+        //Display Inventory
         private void DisplayInventory(int x)
         {
             DisplayLemonAmount(x);
@@ -141,12 +147,24 @@ namespace LemonadeStand
             Console.Write("Cups           : ");
             Console.Write(player.stand.inventory.cups.Count());
         }
+        //Display Money
         private void DisplayMoney(int x)
         {
             Console.SetCursorPosition(x, 1);
             Console.Write("Money");
-            Console.SetCursorPosition(x, 3);
+            Console.SetCursorPosition(x, 2);
             Console.Write("$" + player.money);
+            Console.SetCursorPosition(x-4, 3);
+            Console.Write("Cost per Cup");
+            Console.SetCursorPosition(x, 4);
+            if (player.costPerCup == 0)
+            {
+                Console.Write(" ---");
+            }
+            else
+            {
+                Console.Write("$" + player.costPerCup);
+            }
         }
         private void DisplayProfit(int x)
         {
@@ -165,6 +183,7 @@ namespace LemonadeStand
             Console.Write("  $" + profit);
             Console.ForegroundColor = ConsoleColor.Gray;
         }
+        //Display Recipe
         private void WriteRecipe(int x)
         {
             Console.SetCursorPosition(x + 4, 1);
@@ -217,7 +236,7 @@ namespace LemonadeStand
         {
             for (int i = 1; i < screenWidth - 1; i++)
             {
-                for (int j = upperHeight + 1; j < (screenHeight/2) + 1; j++)
+                for (int j = upperHeight + 1; j < (screenHeight/2) + 2; j++)
                 {
                     Console.SetCursorPosition(i, j);
                     Console.Write(" ");
@@ -310,6 +329,7 @@ namespace LemonadeStand
             Console.SetCursorPosition(x, y + startDaySelection);
             Console.Write("->");
         }
+        //-----------------------
         public void DisplayEndOfDayInformation(int[] complaints)
         {
             ClearMiddleDisplay();
@@ -335,7 +355,7 @@ namespace LemonadeStand
             Console.Write("{0} customers didn't like the amount of sugar.", complaints[3]);
             Console.SetCursorPosition(x, y + 7);
             Console.Write("{0} customers didn't like the amount of ice cubes.", complaints[4]);
-            SetCursorForInput();
+            Console.SetCursorPosition(x, y + 8);
         }
         public void DisplayRequest(string message)
         {
@@ -353,6 +373,19 @@ namespace LemonadeStand
             Console.Write(messageTwo);
             SetCursorForInput();
         }
+        public void DisplayLose()
+        {
+            ClearMiddleDisplay();
+            DisplayRequest("You lose. You failed to make a profit.\n*              Press Enter to play again.\n*              Press Escape to exit.");
+            SetCursorForInput();
+        }
+        public void DisplayWin()
+        {
+            ClearMiddleDisplay();
+            DisplayRequest("You win! You managed to make a profit in this recession!\n*              Press Enter to play again.\n*              Press Escape to exit.");
+            SetCursorForInput();
+        }
+        //Errors
         public void DisplayNoMoneyError()
         {
             ClearMiddleDisplay();
@@ -377,15 +410,16 @@ namespace LemonadeStand
             SetCursorForInput();
             Console.ReadLine();
         }
+        //Set cursor
         public void SetCursorForDisplay()
         {
             Console.SetCursorPosition(15, 9);
         }
-        //---------------------------------------------Input
         public void SetCursorForInput()
         {
             Console.SetCursorPosition(15, 11);
         }
+        //---------------------------------------------Input
         public void GetPlayerName()
         {
             SetCursorForDisplay();
@@ -439,7 +473,7 @@ namespace LemonadeStand
             return message;
         }
         //---------------------------------------------Art
-        private void ClearArt()
+        public void ClearArt()
         {
             for (int i = 1; i < screenWidth - 1; i++)
             {
@@ -556,6 +590,291 @@ namespace LemonadeStand
                 }
             }
             Console.SetWindowPosition(0, 0);
+        }
+        public void DisplayFireworks(int x, int y)
+        {
+            DisplayWriteLock("o", x, y);
+            System.Threading.Thread.Sleep(100);
+            DisplayFireworkStageOne(x, y - 1);
+        }
+        private void DisplayFireworkStageOne(int x, int y)
+        {
+            DisplayWriteLock("|", x, y + 1);
+            DisplayWriteLock("o", x ,y);
+            System.Threading.Thread.Sleep(100);
+            DisplayFireworkStageTwo(x, y);
+        }
+        private void DisplayFireworkStageTwo(int x, int y)
+        {
+            DisplayWriteLock("|", x, y + 1);
+            DisplayWriteLock("|", x, y);
+            DisplayWriteLock("o", x, y -1);
+            System.Threading.Thread.Sleep(100);
+            DisplayFireworkStageThree(x, y - 1);
+        }
+        private void DisplayFireworkStageThree(int x, int y)
+        {
+            DisplayWriteLock(" ", x, y + 2);
+            DisplayWriteLock("|", x, y + 1);
+            DisplayWriteLock("|", x, y);
+            DisplayWriteLock("o", x, y - 1);
+            System.Threading.Thread.Sleep(100);
+            DisplayFireworkStageFour(x, y - 1);
+        }
+        private void DisplayFireworkStageFour(int x, int y)
+        {
+            DisplayWriteLock(" ", x, y + 2);
+            DisplayWriteLock("|", x, y + 1);
+            DisplayWriteLock("|", x, y);
+            DisplayWriteLock("o", x, y - 1);
+            System.Threading.Thread.Sleep(100);
+            DisplayFireworkStageFive(x, y - 1);
+        }
+        private void DisplayFireworkStageFive(int x, int y)
+        {
+            DisplayWriteLock(" ", x, y + 2);
+            DisplayWriteLock("|", x, y + 1);
+            DisplayWriteLock("|", x, y);
+            DisplayWriteLock("o", x, y - 1);
+            System.Threading.Thread.Sleep(100);
+            DisplayFireworkStageSix(x, y - 1);
+        }
+        private void DisplayFireworkStageSix(int x, int y)
+        {
+            DisplayWriteLock(" ", x, y + 2);
+            DisplayWriteLock("|", x, y + 1);
+            DisplayWriteLock("|", x, y);
+            DisplayWriteLock("o", x, y - 1);
+            System.Threading.Thread.Sleep(100);
+            if (random.Next(2) > 0)
+            {
+                DisplayFireworkStageSeven(x, y - 1);
+            }
+            else
+            {
+                DisplayFireworkExplode(x, y - 1);
+            }
+        }
+        private void DisplayFireworkStageSeven(int x, int y)
+        {
+            DisplayWriteLock(" ", x, y + 2);
+            DisplayWriteLock("|", x, y + 1);
+            DisplayWriteLock("|", x, y);
+            DisplayWriteLock("o", x, y - 1);
+            System.Threading.Thread.Sleep(100);
+            if (random.Next(2) > 0)
+            {
+                DisplayFireworkStageEight(x, y - 1);
+            }
+            else
+            {
+                DisplayFireworkExplode(x, y - 1);
+            }
+            
+        }
+        private void DisplayFireworkStageEight(int x, int y)
+        {
+            DisplayWriteLock(" ", x, y + 2);
+            DisplayWriteLock("|", x, y + 1);
+            DisplayWriteLock("|", x, y);
+            DisplayWriteLock("o", x, y - 1);
+            System.Threading.Thread.Sleep(100);
+            if (random.Next(2) > 0)
+            {
+                DisplayFireworkStageNine(x, y - 1); 
+            }
+            else
+            {
+                DisplayFireworkExplode(x, y - 1);
+            }
+        }
+        private void DisplayFireworkStageNine(int x, int y)
+        {
+            DisplayWriteLock(" ", x, y + 2);
+            DisplayWriteLock("|", x, y + 1);
+            DisplayWriteLock("|", x, y);
+            DisplayWriteLock("o", x, y - 1);
+            System.Threading.Thread.Sleep(100);
+            if (random.Next(2) > 0)
+            {
+                DisplayFireworkStageTen(x, y - 1);
+            }
+            else
+            {
+                DisplayFireworkExplode(x, y - 1);
+            }
+        }
+        private void DisplayFireworkStageTen(int x, int y)
+        {
+            DisplayWriteLock(" ", x, y + 2);
+            DisplayWriteLock("|", x, y + 1);
+            DisplayWriteLock("|", x, y);
+            DisplayWriteLock("o", x, y - 1);
+            System.Threading.Thread.Sleep(100);
+            if (random.Next(2) > 0)
+            {
+                DisplayFireworkStageEleven(x, y - 1);
+            }
+            else
+            {
+                DisplayFireworkExplode(x, y - 1);
+            }
+        }
+        private void DisplayFireworkStageEleven(int x, int y)
+        {
+            DisplayWriteLock(" ", x, y + 2);
+            DisplayWriteLock("|", x, y + 1);
+            DisplayWriteLock("|", x, y);
+            DisplayWriteLock("o", x, y - 1);
+            System.Threading.Thread.Sleep(100);
+            if (random.Next(2) > 0)
+            {
+                DisplayFireworkStageTwelve(x, y - 1);
+            }
+            else
+            {
+                DisplayFireworkExplode(x, y - 1);
+            }
+        }
+        private void DisplayFireworkStageTwelve(int x, int y)
+        {
+            DisplayWriteLock(" ", x, y + 2);
+            DisplayWriteLock("|", x, y + 1);
+            DisplayWriteLock("|", x, y);
+            DisplayWriteLock("o", x, y - 1);
+            System.Threading.Thread.Sleep(100);
+            if (random.Next(2) > 0)
+            {
+                DisplayFireworkStageThirteen(x, y - 1);
+            }
+            else
+            {
+                DisplayFireworkExplode(x, y - 1);
+            }
+        }
+        private void DisplayFireworkStageThirteen(int x, int y)
+        {
+            DisplayWriteLock(" ", x, y + 2);
+            DisplayWriteLock("|", x, y + 1);
+            DisplayWriteLock("|", x, y);
+            DisplayWriteLock("o", x, y - 1);
+            System.Threading.Thread.Sleep(100);
+            DisplayFireworkExplode(x, y - 1);
+        }
+        private void DisplayFireworkExplode(int x, int y)
+        {
+            DisplayWriteLock(" ", x, y + 2);
+            DisplayWriteLock(" ", x, y + 1);
+            DisplayWriteLock("o", x, y);
+            Console.SetCursorPosition(0, 0);
+            System.Threading.Thread.Sleep(100);
+            DisplayFireworkExplodeOne(x, y - 1);
+        }
+        private void DisplayFireworkExplodeOne(int x, int y)
+        {
+            GetRandomColor();
+            DisplayWriteLock(":",x, y - 1);
+            DisplayWriteLock(".",x + 1, y - 1);
+            DisplayWriteLock(":",x + 1, y);
+            DisplayWriteLock("'",x + 1, y + 1);
+            DisplayWriteLock(":",x, y + 1);
+            DisplayWriteLock("'",x - 1, y + 1);
+            DisplayWriteLock(":",x - 1, y);
+            DisplayWriteLock(".",x - 1, y - 1);
+            DisplayWriteLock("o",x, y);
+            DisplayWriteLock("*", 0, 0);
+            System.Threading.Thread.Sleep(100);
+            DisplayFireworkExplodeTwo(x, y);
+        }
+        private void DisplayFireworkExplodeTwo(int x, int y)
+        {
+            DisplayWriteLock(".",x, y - 2);
+            DisplayWriteLock("'",x + 2, y - 1);
+            DisplayWriteLock(".",x + 3, y - 1);
+            DisplayWriteLock("=",x + 2, y);
+            DisplayWriteLock("-",x + 3, y);
+            DisplayWriteLock(".",x + 2, y + 1);
+            DisplayWriteLock("'",x + 3, y + 1);
+            DisplayWriteLock("'",x, y + 2);
+            DisplayWriteLock(".",x - 2, y + 1);
+            DisplayWriteLock("'",x - 3, y + 1);
+            DisplayWriteLock("=",x - 2, y);
+            DisplayWriteLock("-",x - 3, y);
+            DisplayWriteLock("'",x - 2, y - 1);
+            DisplayWriteLock(".",x - 3, y - 1);
+            DisplayWriteLock("o",x, y);
+            DisplayWriteLock("*",0, 0);
+            System.Threading.Thread.Sleep(200);
+            Console.ForegroundColor = ConsoleColor.Gray;
+            DisplayFireworkExplodeThree(x, y);
+        }
+        private void DisplayFireworkExplodeThree(int x, int y)
+        {
+            DisplayWriteLock(" ",x, y);
+            DisplayWriteLock("*",0, 0);
+            System.Threading.Thread.Sleep(400);
+            DisplayWriteLock(" ",x, y - 1);
+            DisplayWriteLock(" ",x + 1, y - 1);
+            DisplayWriteLock(" ",x + 2, y);
+            DisplayWriteLock(" ",x - 2, y);
+            DisplayWriteLock(" ",x + 1, y);
+            DisplayWriteLock(" ",x + 1, y + 1);
+            DisplayWriteLock(" ",x, y + 1);
+            DisplayWriteLock(" ",x - 1, y + 1);
+            DisplayWriteLock(" ",x - 1, y);
+            DisplayWriteLock(" ",x - 1, y - 1);
+            DisplayWriteLock("*",0, 0);
+            System.Threading.Thread.Sleep(200);
+            DisplayFireworkExplodeFour(x, y);
+        }
+        private void DisplayFireworkExplodeFour(int x, int y)
+        {
+            DisplayWriteLock(" ",x, y - 2);
+            DisplayWriteLock(" ",x + 2, y - 1);
+            DisplayWriteLock(" ",x + 3, y - 1);
+            DisplayWriteLock(" ",x + 2, y);
+            DisplayWriteLock(" ",x + 3, y);
+            DisplayWriteLock(" ",x + 2, y + 1);
+            DisplayWriteLock(" ",x + 3, y + 1);
+            DisplayWriteLock(" ",x, y + 2);
+            DisplayWriteLock(" ",x - 2, y + 1);
+            DisplayWriteLock(" ",x - 3, y + 1);
+            DisplayWriteLock(" ",x - 2, y);
+            DisplayWriteLock(" ",x - 3, y);
+            DisplayWriteLock(" ",x - 2, y - 1);
+            DisplayWriteLock(" ",x - 3, y - 1);
+            DisplayWriteLock("*",0, 0);
+            System.Threading.Thread.Sleep(100);
+            Console.ForegroundColor = ConsoleColor.Gray;
+        }
+        public void GetRandomColor()
+        {
+            switch (random.Next(5))
+            {
+                case 0:
+                    Console.ForegroundColor = ConsoleColor.Blue;
+                    break;
+                case 1:
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    break;
+                case 2:
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    break;
+                case 3:
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    break;
+                case 4:
+                    Console.ForegroundColor = ConsoleColor.Magenta;
+                    break;
+            }
+        }
+        private void DisplayWriteLock(string message, int x, int y)
+        {
+            lock (GameController.thisLock)
+            {
+                Console.SetCursorPosition(x, y);
+                Console.Write(message);
+            }
         }
     }
 }

@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Animation.cs" />
     <Compile Include="Audio.cs" />
     <Compile Include="Cup.cs" />
     <Compile Include="CupofSugar.cs" />

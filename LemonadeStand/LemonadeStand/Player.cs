@@ -10,7 +10,7 @@ namespace LemonadeStand
     {
         public int[] recipe = new int[3] { 0, 0, 0 };
         public string name;
-        public decimal startingMoney = 50;
+        public decimal startingMoney = 100;
         public decimal money;
         public decimal costPerCup = 0;
         public int drinks;
@@ -24,7 +24,7 @@ namespace LemonadeStand
         public Player()
         {
             stand = new Stand();
-            money = startingMoney;
+            money = startingMoney - 50;
         }
         //Clears all temporary data
         public void Clear()

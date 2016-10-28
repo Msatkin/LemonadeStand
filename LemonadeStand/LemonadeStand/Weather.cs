@@ -85,7 +85,10 @@ namespace LemonadeStand
                     weather = 1.5f;
                     break;
                 case "mostly cloudy":
-                    weather = 1;
+                    weather = 1f;
+                    break;
+                case "scattered clouds":
+                    weather = 1.75f;
                     break;
                 default:
                     weather = 0f;

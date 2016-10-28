@@ -10,9 +10,14 @@ namespace LemonadeStand
     {
         static void Main(string[] args)
         {
-            GameController game = new GameController();
-            game.Start();
-            Console.ReadLine();
+            GameController game;
+            bool exit = false;
+            while (!exit)
+            {
+                game = new GameController();
+                game.Start();
+                System.Threading.Thread.Sleep(50);
+            }
         }
     }
 }

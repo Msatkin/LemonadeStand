@@ -148,6 +148,7 @@ namespace LemonadeStand
             display.DisplayEndOfDayInformation(customerComplaints);
             player.money += player.moneyMade;
             display.DisplayUpperInformation();
+            Console.SetCursorPosition(15, 17);
             Console.ReadLine();
             player.Clear();
         }
