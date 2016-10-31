@@ -1,0 +1,13 @@
+Open/Closed Example:
+
+Customer and Item classes are abstract classes to allow for easy additions later on.
+
+Single Responsibilty Example:
+This function prefroms its ONE job well.
+
+public void DisplayRequest(string message)
+{
+	SetCursorForDisplay();
+	Console.Write(message);
+	SetCursorForInput();
+}

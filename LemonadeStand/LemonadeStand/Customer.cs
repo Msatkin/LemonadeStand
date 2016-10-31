@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace LemonadeStand
 {
-    class Customer
+    public abstract class Customer
     {
         public decimal money;
         public int[] tastePreference = new int[3];
